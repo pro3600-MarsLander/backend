@@ -32,6 +32,9 @@ class Lander:
     fuel : int
     rotate : int
     power : int
+    
+    def __init__(self):
+        pass
 
     def __str__(self):
         try:

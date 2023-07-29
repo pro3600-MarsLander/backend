@@ -1,7 +1,7 @@
 import math
 
-from src.surface import Surface
-from src.lander import Lander
+from src.environment.surface import Surface
+from src.environment.lander import Lander
 
 MARS_GRAVITY = -3.711
 X_SCALE = 7000

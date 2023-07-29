@@ -7,18 +7,21 @@ class Surface:
 
     def __init__(self, points: list[Point]):
         self.lands = []
-        for i in range(len(self.points)-1):
+        for i in range(len(points)-1):
             self.lands.append(Segment(points[i], points[i+1]))
-            if self.points[i].y == self.points[i+1].y:
-                self.landing_area = [self.points[i], self.points[i+1]]
+            if points[i].y == points[i+1].y:
+                self.landing_area = [points[i], points[i+1]]
                 
 
     def is_landing_area(self, segment):
-        return segment.point_a.y == segment.point_b.y
+        if segment:
+            return segment.point_a.y == segment.point_b.y
+        return False
+    
 
-    def they_collide(self, trajectoire: Segment) -> bool:
+    def they_collide(self, trajectory: Segment) -> bool:
         for land in self.lands:
-            if trajectoire.collision(land):
+            if trajectory.collision(land):
                 return land
         return None
     
