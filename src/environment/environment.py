@@ -14,11 +14,11 @@ class Environement:
     surface : Surface
     lander : Lander
 
-    def __init__(self, surface : list, initial_state : list):
+    def __init__(self, surface : list, initial_state):
         self.surface = surface
         self.initial_state = initial_state
-        self.lander = Lander(initial_state)
-        
+        self.lander = Lander(**initial_state)
+
 
     def __str__(self) -> str:
         #return "\n".join([score_info,coord_info,speed_info,rotate_info,fuel_info])
@@ -71,7 +71,7 @@ class Environement:
     def next_dynamics_parameters(self, rotate, power):
         
         h_accel = - power * math.sin(rotate*math.pi/180) 
-        v_accel = power * math.cos(rotate*math.pi/180) + self.GRAVITY   
+        v_accel = power * math.cos(rotate*math.pi/180) + MARS_GRAVITY   
 
         h_speed = self.lander.h_speed + h_accel
         v_speed = self.lander.v_speed + v_accel
@@ -109,6 +109,8 @@ class Environement:
             fuel = 0
 
         x, y, h_speed, v_speed = self.next_dynamics_parameters(rotate, power)
+
+        self.lander.update(x=x, y=y, h_speed=h_speed, v_speed=v_speed, fuel=fuel, rotate=rotate, power=power)
 
 
 

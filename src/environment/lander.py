@@ -1,3 +1,6 @@
+import sys
+
+    
 x_scale = 7000
 y_scale = 3000
 h_speed_scale = 1000
@@ -33,8 +36,22 @@ class Lander:
     rotate : int
     power : int
     
-    def __init__(self):
-        pass
+    def __init__(self, **kargs):
+        self.x = kargs.get('x')
+        self.y = kargs.get('y')
+        self.h_speed = kargs.get('h_speed')
+        self.v_speed = kargs.get('v_speed')
+        self.fuel = kargs.get('fuel')
+        self.rotate = kargs.get('rotate')
+        self.power = kargs.get('power')
+
+    def update(self, **kwargs):
+        for cle, valeur in kwargs.items():
+            if hasattr(self, cle):
+                setattr(self, cle, valeur)
+            else:
+                print(f"Attention : Le champ '{cle}' n'existe pas dans la classe.", file=sys.stderr)
+
 
     def __str__(self):
         try:
