@@ -2,7 +2,7 @@ import math
 
 from src.environment.surface import Surface
 from src.environment.lander import Lander
-
+from src.environment.action import Action
 MARS_GRAVITY = -3.711
 X_SCALE = 7000
 Y_SCALE = 3000
@@ -81,7 +81,7 @@ class Environement:
 
         return x, y, h_speed, v_speed
 
-    def step(self, rotate, power) -> bool:
+    def step(self, action: Action) -> bool:
         """        
         -rotate is the desired rotation angle for Mars lander. 
         Please note that for each turn the actual value of the angle 
@@ -95,12 +95,12 @@ class Environement:
         
         rotate = max(-90, min(
             90,
-            self.lander.rotate + rotate
+            self.lander.rotate + action.rotate
         )) 
 
         power = max(0, min(
             4,
-            self.lander.power + power
+            self.lander.power + action.power
         ))
         
         fuel = self.lander.fuel - power
