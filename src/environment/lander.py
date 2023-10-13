@@ -52,7 +52,6 @@ class Lander:
             else:
                 print(f"Attention : Le champ '{cle}' n'existe pas dans la classe.", file=sys.stderr)
 
-
     def __str__(self):
         try:
             return f"{self.x} {self.y} {self.h_speed} {self.v_speed} {self.fuel} {self.rotate} {self.power}"
@@ -75,7 +74,7 @@ class Lander:
     def copy(self, other):
         """Copy other into self"""
         self.update(
-            other.x, 
+            other.x,
             other.y,
             other.h_speed, 
             other.v_speed, 

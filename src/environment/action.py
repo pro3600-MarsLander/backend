@@ -28,11 +28,6 @@ class Action:
     def __eq__(self, other) -> bool:
         return self.rotate == other.rotate and self.power == other.power
 
-    def mutate(self) -> None:
-        """ Set up the action with random setings"""
-        self.rotate = random.choices(list(range(-15, 16)), WEIGHTS_ROTATION )[0]
-        self.power = random.choices([-1, 0, 1], WEIGHTS_POWER)[0]
-
     def last_action(self, rotate):
         """Choose the best action to choose"""
         if abs(rotate) <= 15:

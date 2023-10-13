@@ -1,3 +1,6 @@
+##
+#%%
+
 import math
 
 class Point:
@@ -15,15 +18,17 @@ class Point:
     def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other, epsilon=0.01) -> bool:
         """Here the notion of equality is discretised"""
         if self.x is None :
             print("Error : self is None")
         elif other.x is None:
             print("Error : other is None")
         else:
-            return (abs(self.x - other.x) < 1 and abs(self.y - other.y) < 1)
+            return (abs(self.x - other.x) < epsilon and abs(self.y - other.y) < epsilon)
 
     def distance(self, other) -> float:
         """Calcul the distance between two points"""
         return math.sqrt((other.x - self.x)**2 + (other.y - self.y)**2 )
+
+# %%

@@ -67,7 +67,7 @@ class Environement:
             self.landing_horizontal_speed()
             )
   
-
+    
     def next_dynamics_parameters(self, rotate, power):
         
         h_accel = - power * math.sin(rotate*math.pi/180) 
