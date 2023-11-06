@@ -7,12 +7,13 @@ from backend.src.solutions.genetic.genes.abstract_gene import AbstractGene
 
 class AbstractChromosome:
 
-    def __init__(self, genes_: Generic(AbstractGene) = Generic()):
+    def __init__(self, identifier: int, genes_: Generic(AbstractGene) = Generic()):
+        self.identifier = identifier
         self.genes = genes_
-
+        
     @staticmethod
     @abstractmethod
-    def generator():
+    def generator(**kargs):
         pass
 
     @abstractmethod

@@ -9,9 +9,10 @@ class ActionChromosome(AbstractChromosome):
         super().__init__(genes_=genes_)
 
     @staticmethod
-    def generator(gene_number: int):        
-        genes = [ActionChromosome.generator() for _ in range(gene_number)]
-        return ActionChromosome(genes_=genes)
+    def generator(identifier: int, chromosome_size: int):    
+            
+        genes = [ActionChromosome.generator() for _ in range(chromosome_size)]
+        return ActionChromosome(identifier= identifier, genes_=genes)
 
 
     def mutate(self):
@@ -20,5 +21,5 @@ class ActionChromosome(AbstractChromosome):
                 gene.mutate()
 
     def use(self, iteration: int):
-        return self.
+        return self.genes[iteration]
     

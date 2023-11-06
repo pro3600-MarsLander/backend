@@ -1,17 +1,24 @@
 import random
 
-from src.genetic.chromosome import Chromosome
 
-GRADED_RETAIN_PERCENT = 0.1    # percentage of retained best fitting individuals
-NONGRADED_RETAIN_PERCENT = 0.2  # percentage of retained remaining individuals (randomly selected)
-MUTATION_PROBABILITY = 0.01
+from solutions.genetic.score.scoring import Scoring
+from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
+from solutions.genetic.utils.constants import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
+
 
 class Population:
-    chromosomes : list[Chromosome]
+    chromosomes : list[AbstractChromosome]
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, chromosomes: list(AbstractChromosome)) -> None:
+        self.chromosomes = chromosomes
+        self.chromosomes_score = [0]*len(chromosomes)
 
+    @staticmethod
+    def generator(population_size: int=POPULATION_SIZE, chromosome_type=AbstractChromosome):
+        chromosomes = [chromosome_type.generator(identifier=identifier, chromosome_size=CHROMOSOME_SIZE) for identifier in range(population_size)]
+        return Population(chromosomes=chromosomes)
+    
+    @property
     def get_length(self) -> int:
         return len(self.chromosomes)
 
@@ -22,18 +29,17 @@ class Population:
         """
 
         #Extract the population sorted by score of each chromosome
-        self.chromosomes = list(
-            sorted(self.chromosomes, key=Chromosome.get_score)
+        self.chromosomes.sort(
+            key=lambda chromosome: self.scores[chromosome.identifier],
+            reverse=True
         )
         #Take the size_skipped best
-        best_chromosome = self.chromosomes[-1]
-
-
+        best_chromosome = self.chromosomes[0]
         return best_chromosome
 
     
-    def cumulative_wheel(self, initial_index, final_index) -> GeneratorExit(list[Chromosome]):
-        total_score = sum(map(Chromosome.get_score, self.chromosomes))
+    def cumulative_wheel(self, initial_index, final_index) -> GeneratorExit(list[AbstractChromosome]):
+        total_score = sum(self.chromosomes_score)
         cumulative_scores = list()
         cumulative_score = 0
         for chromosome in self:
@@ -59,8 +65,8 @@ class Population:
         i0, i1 = 0, 1
         for parent0, parent1 in self.cumulative_wheel(0, final_index):               
             child0, child1 = parent0.crossover(parent1)
-            child0.mutation(MUTATION_PROBABILITY)
-            child1.mutation(MUTATION_PROBABILITY)
+            child0.mutation()
+            child1.mutation()
             self.chromosomes[i0] = child0
             self.chromosomes[i1] = child1 
             i0 +=1

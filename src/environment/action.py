@@ -4,7 +4,11 @@ from environment.utils.constants import ACTION_POWER_SCALE, ACTION_ROTATE_SCALE
 from environment.utils.utils import clamp
 
 class Action:
-    """Action of the lander
+    """
+    Action of the lander :
+    It represents an action that the lander can do
+
+    FIELDS
         rotate : [-15,15]
             action of rotation
         power : [-1,1]
