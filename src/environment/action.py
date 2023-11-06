@@ -1,8 +1,7 @@
 import random
-WEIGHTS_ROTATION = [1]*10 + [3]*11 + [1]*10
 
-WEIGHTS_ROTATION = [1]*31
-WEIGHTS_POWER = [0.1, 0.70, 0.20]
+from environment.utils.constants import ACTION_POWER_SCALE, ACTION_ROTATE_SCALE
+from environment.utils.utils import clamp
 
 class Action:
     """Action of the lander
@@ -12,15 +11,9 @@ class Action:
             action of power
     """
 
-    @staticmethod
-    def generator():
-        action = Action(0,0)
-        action.mutate()
-        return action
-
     def __init__(self, rotate : int, power : int):
-        self.rotate = rotate
-        self.power = power
+        self.rotate = clamp(rotate, -ACTION_ROTATE_SCALE, ACTION_ROTATE_SCALE)
+        self.power = clamp(power, -ACTION_POWER_SCALE, ACTION_POWER_SCALE)
 
     def __str__(self) -> str:
         return f"{self.rotate} {self.power}"

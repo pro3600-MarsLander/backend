@@ -1,13 +1,7 @@
 import sys
 
+from environment.utils.constants import X_SCALE, Y_SCALE, H_SPEED_SCALE, V_SPACE_SCALE, ROTATE_SCALE, POWER_SCALE
     
-x_scale = 7000
-y_scale = 3000
-h_speed_scale = 1000
-v_speed_scale = 1000
-rotate_scale = 180
-power_scale = 5
-
 
 class Lander:
 
@@ -82,13 +76,3 @@ class Lander:
             other.rotate, 
             other.power
         )
-        
-    def update(self, x, y, h_speed, v_speed, fuel, rotate, power):
-        """Update the caracteristics of the lander"""
-        self.x = x
-        self.y = y
-        self.h_speed = h_speed
-        self.v_speed = v_speed
-        self.fuel = fuel
-        self.rotate = rotate
-        self.power = power

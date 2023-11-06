@@ -1,11 +1,9 @@
 import math
 
 from src.environment.surface import Surface
-from src.environment.lander import Lander
+from backend.src.environment.entities.lander import Lander
 from src.environment.action import Action
-MARS_GRAVITY = -3.711
-X_SCALE = 7000
-Y_SCALE = 3000
+from environment.utils.constants import MARS_GRAVITY, X_SCALE, Y_SCALE, ROTATE_SCALE, POWER_SCALE
 
 
 class Environement:
@@ -36,7 +34,6 @@ class Environement:
     def reset(self):
         """Reset the lander"""
         self.lander.update(*self.initial_state)
-        self.maximal_speed = 0
 
     def exit_zone(self) -> bool:
         return not (0 <= self.lander.x < 7000 and 0 <= self.lander.y < 3000)
@@ -93,13 +90,13 @@ class Environement:
         is limited to the value of the previous turn +/- 1.
         """
         
-        rotate = max(-90, min(
-            90,
+        rotate = max(-ROTATE_SCALE, min(
+            ROTATE_SCALE,
             self.lander.rotate + action.rotate
         )) 
 
         power = max(0, min(
-            4,
+            POWER_SCALE,
             self.lander.power + action.power
         ))
         
@@ -111,9 +108,4 @@ class Environement:
         x, y, h_speed, v_speed = self.next_dynamics_parameters(rotate, power)
 
         self.lander.update(x=x, y=y, h_speed=h_speed, v_speed=v_speed, fuel=fuel, rotate=rotate, power=power)
-
-
-
-    
-
         
