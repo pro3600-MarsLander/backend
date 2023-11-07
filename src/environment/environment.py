@@ -5,17 +5,25 @@ from environment.entities.lander import Lander
 from environment.action import Action
 from environment.utils.constants import MARS_GRAVITY, X_SCALE, Y_SCALE, ROTATE_SCALE, POWER_SCALE
 
+from utils.segment import Segment
+from utils.point import Point
 
 class Environement:
-    """ Environment of the Mars lander puzzle of CodinGames"""
+    """ Environment of the Mars lander puzzle of CodinGames
+    
+    FIELDS : 
+        surface : 
+
+    """
 
     surface : Surface
     lander : Lander
 
     def __init__(self, surface : list, initial_state):
-        self.surface = surface
+        self.surface : Surface = surface
         self.initial_state = initial_state
         self.lander = Lander(**initial_state)
+        self.collision_area = None
 
 
     def __str__(self) -> str:
@@ -33,13 +41,13 @@ class Environement:
  
     def reset(self):
         """Reset the lander"""
-        self.lander.update(*self.initial_state)
+        self.lander.update(**self.initial_state)
 
     def exit_zone(self) -> bool:
         return not (0 <= self.lander.x < 7000 and 0 <= self.lander.y < 3000)
 
     def landing_on_site(self) -> bool:
-        return self.surface.collision_line == self.surface.landing_site
+        return self.collision_area == self.surface.landing_area
 
     def landing_angle(self) -> bool:
         return self.lander.rotate == 0
@@ -64,6 +72,7 @@ class Environement:
             self.landing_horizontal_speed()
             )
   
+    
     
     def next_dynamics_parameters(self, rotate, power):
         
@@ -106,6 +115,15 @@ class Environement:
             fuel = 0
 
         x, y, h_speed, v_speed = self.next_dynamics_parameters(rotate, power)
-
+        prev_position = Point(self.lander.x, self.lander.y)
         self.lander.update(x=x, y=y, h_speed=h_speed, v_speed=v_speed, fuel=fuel, rotate=rotate, power=power)
+        actu_position = Point(self.lander.x, self.lander.y)
+        trajectory = Segment(prev_position, actu_position)
+        collision_area = self.surface.they_collide(trajectory)
+
+        if not collision_area is None:
+            self.collision_area = collision_area
+            return True
+        else:
+            return False
         

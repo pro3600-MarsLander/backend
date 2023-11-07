@@ -3,7 +3,7 @@ import random
 from typing import Union, Generic
 from abc import abstractmethod
 from environment.action import Action
-from backend.src.solutions.genetic.genes.abstract_gene import AbstractGene
+from solutions.genetic.genes.abstract_gene import AbstractGene
 
 class AbstractChromosome:
 
@@ -22,4 +22,7 @@ class AbstractChromosome:
 
     @abstractmethod
     def use(self, **kargs):
+        pass
+
+    def reset(self):
         pass

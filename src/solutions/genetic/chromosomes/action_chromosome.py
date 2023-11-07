@@ -7,7 +7,7 @@ class ActionChromosome(AbstractChromosome):
 
     def __init__(self, genes_: list(ActionGene)):
         super().__init__(genes_=genes_)
-
+        self.iterator = 0
     @staticmethod
     def generator(identifier: int, chromosome_size: int):    
             
@@ -20,6 +20,17 @@ class ActionChromosome(AbstractChromosome):
             if random.random() < CHROMOSOME_MUTATION_PROBABILITY:
                 gene.mutate()
 
-    def use(self, iteration: int):
-        return self.genes[iteration]
+    @property
+    def get_lenght(self):
+        return len(self.genes)
+    
+    def reset(self):
+        self.iterator = 0
+
+    def use(self):
+        if self.iterator >= self.get_lenght():
+            return None
+        action = self.genes[self.iterator]
+        self.iterator +=1
+        return action
     

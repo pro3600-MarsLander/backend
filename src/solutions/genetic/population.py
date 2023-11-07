@@ -1,7 +1,5 @@
 import random
 
-
-from solutions.genetic.score.scoring import Scoring
 from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
 from solutions.genetic.utils.constants import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
 
@@ -14,13 +12,24 @@ class Population:
         self.chromosomes_score = [0]*len(chromosomes)
 
     @staticmethod
-    def generator(population_size: int=POPULATION_SIZE, chromosome_type=AbstractChromosome):
-        chromosomes = [chromosome_type.generator(identifier=identifier, chromosome_size=CHROMOSOME_SIZE) for identifier in range(population_size)]
+    def generator(population_size: int=POPULATION_SIZE, chromosome_size=CHROMOSOME_SIZE, chromosome_type=AbstractChromosome):
+        chromosomes = [chromosome_type.generator(identifier=identifier, chromosome_size=chromosome_size) for identifier in range(population_size)]
         return Population(chromosomes=chromosomes)
     
     @property
     def get_length(self) -> int:
         return len(self.chromosomes)
+    
+    def reset(self):
+        for index in range(self.get_length):
+            self.chromosomes_score[index] = 0
+            self.chromosomes[index].reset()
+    
+    def __iter__(self):
+        return iter(self.chromosomes)
+    
+    def __next__(self):
+        return next(self)
 
     def selection(self):
         """ Do the population go trought a selection process
@@ -77,6 +86,9 @@ class Population:
             c for c in self.new_chromosomes
         ]
         self.new_chromosomes = []
+
+    def set_score(self, index, score):
+        self.chromosomes_score[index] += score
 
     def evolution(self):
         #self.generate_score()

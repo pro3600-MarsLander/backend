@@ -6,6 +6,7 @@
 import pygame
 import os
 import sys
+import time
 
 from environment.environment import Environement
 from environment.surface import Surface
@@ -18,7 +19,7 @@ from utils.point import Point
 from utils.segment import Segment
 
 from maps.basic_map_1 import MAP
-from gui.gui_genetic.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN
+from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN
 
 
 fx = lambda x : int(WINDOW_WIDTH * x / X_SCALE)
@@ -58,21 +59,22 @@ class Gui:
         surface : Surface= self.environment.surface
         border_left = surface.lands[0].point_a
         border_right = surface.lands[-1].point_b
-        for line in surface.lines():
-            if not line.point_a in border_left and not line.point_b in border_right:
-                pygame.draw.line(
-                    self.display, 
-                    RED, 
-                    [fx(line.point_a.x), fy(line.point_a.y)],
-                    [fx(line.point_b.x), fy(line.point_b.y)]
-                )
+        for line in surface.lands:
+            pygame.draw.line(
+                self.display, 
+                RED, 
+                [fx(line.point_a.x), fy(line.point_a.y)],
+                [fx(line.point_b.x), fy(line.point_b.y)]
+            )
 
     def step(self):
-        action = self.solution.use(self.environment)
-        done = self.environment.step(action)
-        self.trajectory.append([self.environment.lander.x, self.environment.lander.y])
-        #pygame.transform.rotate(self.lander_image,self.rotate)
         
+        action = self.solution.use(environment = self.environment)
+        done = self.environment.step(action)
+        lander_position = (fx(self.environment.lander.x), fy(self.environment.lander.y))
+        self.trajectory.append(lander_position)
+        #pygame.transform.rotate(self.lander_image,self.rotate)
+        pygame.draw.line(self.display, WHITE, lander_position, lander_position)
         if done :
             if self.environment.successful_landing():
                 self.env_iterator -=1
@@ -83,43 +85,44 @@ class Gui:
             else:
                 color = BLUE
                 width_ = 1
-            x_, y_ = self.trajectory[0]
-            for x,y in self.trajectory[1:]:
+            start_point = self.trajectory[0]
+            for end_point in self.trajectory[1:]:
                 pygame.draw.line(
                     self.display, 
                     color, 
-                    [fx(x_), fy(y_)],
-                    [fx(x), fy(y)],
+                    start_point,
+                    end_point,
                     width=width_
                 )
-                x_, y_ = x, y
+                start_point = end_point
 
         return done
       
-    def pygame_step(self, success):
-
+    def pygame_step(self, success, manual_step=False):
+        
         pygame.display.flip()
         pygame.event.wait()
+
         def quit_gui():
             pygame.display.quit()
             pygame.quit()
             sys.exit()
+        if manual_step:
+            while True:
+                event = pygame.event.wait()
+                if success:
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        success = False
+                        break
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                        quit_gui()
 
-        while True:
-            event = pygame.event.wait()
-            if success:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    success = False
-                    break
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        break
+                        
+                if event.type == pygame.QUIT:
                     quit_gui()
-
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    break
-                    
-            if event.type == pygame.QUIT:
-                quit_gui()
 
         self.render_reset()
         self.display_text(
@@ -145,5 +148,6 @@ class Gui:
         while not done:
             done = self.step()
             self.pygame_step(done)
+            time.sleep(1/FRAMES_PER_SECOND)
 
 
