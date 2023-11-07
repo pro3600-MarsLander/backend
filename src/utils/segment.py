@@ -1,4 +1,4 @@
-from src.tools.point import Point
+from utils.point import Point
 class Segment:
     """Define a segment in space
         point_a : Point

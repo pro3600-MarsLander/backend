@@ -1,8 +1,8 @@
 import math
 
-from src.environment.surface import Surface
-from backend.src.environment.entities.lander import Lander
-from src.environment.action import Action
+from environment.surface import Surface
+from environment.entities.lander import Lander
+from environment.action import Action
 from environment.utils.constants import MARS_GRAVITY, X_SCALE, Y_SCALE, ROTATE_SCALE, POWER_SCALE
 
 

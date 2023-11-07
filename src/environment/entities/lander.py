@@ -1,9 +1,10 @@
 import sys
 
+from environment.entities.entity import Entity
 from environment.utils.constants import X_SCALE, Y_SCALE, H_SPEED_SCALE, V_SPACE_SCALE, ROTATE_SCALE, POWER_SCALE
     
 
-class Lander:
+class Lander(Entity):
 
     """Define the lander
     x : [0, 6999]
@@ -31,20 +32,10 @@ class Lander:
     power : int
     
     def __init__(self, **kargs):
-        self.x = kargs.get('x')
-        self.y = kargs.get('y')
-        self.h_speed = kargs.get('h_speed')
-        self.v_speed = kargs.get('v_speed')
+        super().__init__(**kargs)
         self.fuel = kargs.get('fuel')
         self.rotate = kargs.get('rotate')
         self.power = kargs.get('power')
-
-    def update(self, **kwargs):
-        for cle, valeur in kwargs.items():
-            if hasattr(self, cle):
-                setattr(self, cle, valeur)
-            else:
-                print(f"Attention : Le champ '{cle}' n'existe pas dans la classe.", file=sys.stderr)
 
     def __str__(self):
         try:
@@ -55,24 +46,4 @@ class Lander:
     def get_state(self):
         return [self.x, self.y, self.h_speed, self.v_speed, self.fuel, self.rotate, self.power]
 
-
-    def __eq__(self, other) -> bool:
-        for self_attr, other_attr in zip(vars(self).values(), vars(other).values()):
-            if not round(self_attr) == round(other_attr):
-                return False
-        return True
-
-    def __ne__(self, other) -> bool:
-        return not self.__eq__(other)
         
-    def copy(self, other):
-        """Copy other into self"""
-        self.update(
-            other.x,
-            other.y,
-            other.h_speed, 
-            other.v_speed, 
-            other.fuel, 
-            other.rotate, 
-            other.power
-        )

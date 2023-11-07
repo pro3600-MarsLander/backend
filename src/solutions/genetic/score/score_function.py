@@ -1,10 +1,10 @@
 import numpy
 
-from src.tools.point import Point
-from src.tools.segment import Segment
-from src.environment.surface import Surface
-from backend.src.environment.entities.lander import Lander
-from src.environment.environment import Environement
+from utils.point import Point
+from utils.segment import Segment
+from environment.surface import Surface
+from environment.entities.lander import Lander
+from environment.environment import Environement
 
 def landing_distance(surface: Surface, lander: Lander, collision_land: Segment):
     """ Calculate the distance by "walke" of the collision to the landing site"""

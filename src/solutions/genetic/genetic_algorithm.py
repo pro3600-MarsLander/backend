@@ -17,8 +17,6 @@ class AlgoType(Enum):
             return ActionGene
 
 class GeneticAlgorithm:
-    
-
     def __init__(self):
         self.algo_type = AlgoType.ACTION
 

@@ -1,5 +1,5 @@
-from src.tools.point import Point
-from src.tools.segment import Segment
+from utils.point import Point
+from utils.segment import Segment
 
 class Surface:
     lands : list[Segment]
@@ -16,7 +16,6 @@ class Surface:
             if points[i].y == points[i+1].y:
                 self.landing_area = land
                 
-
     def is_landing_area(self, segment):
         if segment:
             return segment.point_a.y == segment.point_b.y

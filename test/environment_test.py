@@ -4,7 +4,7 @@ import json
 from src.tools.point import Point
 from src.tools.segment import Segment
 from src.environment.surface import Surface
-from src.environment.lander import Lander
+from backend.src.environment.entities.lander import Lander
 from src.environment.environment import Environement
 from src.environment.action import Action
 
