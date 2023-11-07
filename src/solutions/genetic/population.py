@@ -2,18 +2,21 @@ import random
 
 from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
 from solutions.genetic.utils.constants import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
+from solutions.genetic.chromosomes.action_chromosome import ActionChromosome
 
+chromosome_type=ActionChromosome
 
 class Population:
     chromosomes : list[AbstractChromosome]
 
-    def __init__(self, chromosomes: list(AbstractChromosome)) -> None:
+    def __init__(self, chromosomes: list[AbstractChromosome]):
         self.chromosomes = chromosomes
         self.chromosomes_score = [0]*len(chromosomes)
 
     @staticmethod
-    def generator(population_size: int=POPULATION_SIZE, chromosome_size=CHROMOSOME_SIZE, chromosome_type=AbstractChromosome):
-        chromosomes = [chromosome_type.generator(identifier=identifier, chromosome_size=chromosome_size) for identifier in range(population_size)]
+    def generator(population_size: int=POPULATION_SIZE, chromosome_size=CHROMOSOME_SIZE, **kargs):
+        
+        chromosomes = [ActionChromosome.generator(identifier=identifier, chromosome_size=chromosome_size) for identifier in range(population_size)]
         return Population(chromosomes=chromosomes)
     
     @property
@@ -95,6 +98,7 @@ class Population:
         best_chromosome = self.selection()
         self.mutation()
         #self.population_switch()
+        self.reset()
         return best_chromosome
 
 

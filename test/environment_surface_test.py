@@ -3,8 +3,8 @@
 import unittest
 import json
 from src.environment.surface import Surface
-from src.tools.point import Point
-from src.tools.segment import Segment
+from src.utils.point import Point
+from src.utils.segment import Segment
 
 ##
 #%%

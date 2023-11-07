@@ -9,6 +9,7 @@ from gui.gui_sr import Gui
 from maps.map_path import FLAT_SURFACE, LEVEL_ONE, CAVE_REVERSED
 
 from solutions.examples.solution_fall import SolutionFall
+from solutions.genetic.genetic_algorithm import GeneticAlgorithm
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -24,7 +25,8 @@ def main():
 
     surface = Surface(points)
     environment = Environement(surface, initial_state)
-    solution = SolutionFall()
+    solution = GeneticAlgorithm()
+    print(solution.best_chromosome)
     gui = Gui(environment, solution)
     gui.run()
 

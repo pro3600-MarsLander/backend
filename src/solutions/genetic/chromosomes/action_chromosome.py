@@ -5,14 +5,13 @@ from solutions.genetic.utils.constants import CHROMOSOME_MUTATION_PROBABILITY
 
 class ActionChromosome(AbstractChromosome):
 
-    def __init__(self, genes_: list(ActionGene)):
-        super().__init__(genes_=genes_)
+    def __init__(self, genes_: list[ActionGene], identifier: int = 0):
+        super().__init__(genes_=genes_, identifier=identifier)
         self.iterator = 0
     @staticmethod
     def generator(identifier: int, chromosome_size: int):    
-            
-        genes = [ActionChromosome.generator() for _ in range(chromosome_size)]
-        return ActionChromosome(identifier= identifier, genes_=genes)
+        genes = [ActionGene.generator() for _ in range(chromosome_size)]
+        return ActionChromosome(identifier=identifier, genes_=genes)
 
 
     def mutate(self):

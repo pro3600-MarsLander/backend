@@ -10,4 +10,7 @@ class AbstractSolution:
 
     @abstractmethod
     def use(self, **kargs) -> Action:
+        """
+        By given some parameters, use return the next action the lander have to make
+        """
         pass
