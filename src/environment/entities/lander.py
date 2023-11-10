@@ -39,7 +39,7 @@ class Lander(Entity):
 
     def __str__(self):
         try:
-            return f"{self.x} {self.y} {self.h_speed} {self.v_speed} {self.fuel} {self.rotate} {self.power}"
+            return f"x, y: {self.x}  {self.y} | speed: {self.h_speed} {self.v_speed} | fuel, rotate, power: {self.fuel} {self.rotate} {self.power}"
         except AttributeError :
             return "lander not yiet initialized"
         

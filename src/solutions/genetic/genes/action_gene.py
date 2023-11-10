@@ -7,7 +7,7 @@ class ActionGene(AbstractGene, Action):
 
 
     def __init__(self, **kargs):
-        super(Action).__init__(**kargs)
+        super().__init__(**kargs)
 
     @staticmethod
     def generator():

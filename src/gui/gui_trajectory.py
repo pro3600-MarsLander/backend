@@ -1,8 +1,3 @@
-##
-#%%  
-
-
-
 import pygame
 import os
 import sys
@@ -13,20 +8,24 @@ from environment.surface import Surface
 from environment.entities.lander import Lander
 from environment.utils.constants import X_SCALE, Y_SCALE
 
+from gui.gui_sr import Gui
+
 from solutions.abstract_solution import AbstractSolution
 
 from utils.point import Point
 from utils.segment import Segment
 
 from maps.basic_map_1 import MAP
-from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN
+from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, WHITE, BLACK, BLUE, RED, GREEN
 
-
+FRAMES_PER_SECOND = 2   
 fx = lambda x : int(WINDOW_WIDTH * x / X_SCALE)
 fy = lambda y : WINDOW_HEIGHT - int(WINDOW_HEIGHT * y / Y_SCALE)
 
 
-class Gui:
+
+class GuiTrajectory:
+    
     def __init__(self, environment: Environement, solution : AbstractSolution):
         self.environment = environment
         self.solution = solution
@@ -43,7 +42,7 @@ class Gui:
         
     def reset(self):
         self.environment.reset()
-        self.trajectory = []
+        self.trajectories = []
 
     def display_text(self, text, position):
         id_text = self.font.render(text, True, (255, 255, 255))
@@ -65,38 +64,52 @@ class Gui:
                 [fx(line.point_b.x), fy(line.point_b.y)]
             )
 
+    def draw_trajectory(self, trajectory, color, width):
+        for index in range(len(trajectory)-1):
+            point_a = trajectory[index]
+            point_b = trajectory[index+1]
+            pygame.draw.line(
+                self.display,
+                color,
+                [fx(point_a[0]), fy(point_a[1])],
+                [fx(point_b[0]), fy(point_b[1])],
+                width=width
+            )
+            
+
 
     def step(self):        
-        action = self.solution.use(environment = self.environment)
-        done = self.environment.step(action)
-        lander_position = (fx(self.environment.lander.x), fy(self.environment.lander.y))
-        self.trajectory.append(lander_position)
+        """
+        This is a step for each evolution
+        """
+        done, trajectories = self.solution.one_evolution(environment=self.environment)
         #pygame.transform.rotate(self.lander_image,self.rotate)
-        pygame.draw.line(self.display, WHITE, lander_position, lander_position)
         if done :
-            if self.environment.successful_landing():
-                self.env_iterator -=1
-                self.render_reset()
-                color = GREEN
-                width_ = 5
-
-            else:
-                color = BLUE
-                width_ = 1
-            start_point = self.trajectory[0]
-            for end_point in self.trajectory[1:]:
-                pygame.draw.line(
-                    self.display, 
-                    color, 
-                    start_point,
-                    end_point,
-                    width=width_
-                )
-                start_point = end_point
-
+            self.render_reset()
+            color_ = GREEN
+            width_ = 5
+            trajectory = trajectories[self.solution.get_index_best]
+            self.draw_trajectory(trajectory, color_, width_)
+        else:
+            color_ = BLUE
+            width_ = 1
+            for trajectory in trajectories:
+                self.draw_trajectory(trajectory, color_, width_)
+            
         return done
-      
-    def pygame_step(self, success, manual_step=False):
+    
+    def draw_parameters(self):
+        self.display_text(
+            "Parameters : ",
+            (80, 100)
+        )
+        for order, (name, value) in enumerate(self.solution.get_parameters().items()): # parameter = [name, value]
+            self.display_text(
+                f"{name} : {value}",
+                (100, 130 + order*30)
+            )
+
+    def pygame_step(self, success, manual_step=True):
         
         pygame.display.flip()
         pygame.event.wait()
@@ -123,16 +136,7 @@ class Gui:
                     quit_gui()
 
         self.render_reset()
-        self.display_text(
-            "Parameters : ",
-            (400, 100)
-        )
-        for order, (name, value) in enumerate(self.solution.get_parameters()):
-            self.display_text(
-                f"{name} : {value}",
-                (400, 130 + order*30)
-            )
-
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.display.quit()
@@ -144,6 +148,7 @@ class Gui:
         self.reset()
         self.render_reset()
         while not done:
+            self.draw_parameters()
             done = self.step()
             self.pygame_step(done)
             time.sleep(1/FRAMES_PER_SECOND)

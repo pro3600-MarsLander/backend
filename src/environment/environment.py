@@ -44,9 +44,10 @@ class Environement:
         self.lander.update(**self.initial_state)
 
     def exit_zone(self) -> bool:
-        return not (0 <= self.lander.x < 7000 and 0 <= self.lander.y < 3000)
+        return not (0 <= self.lander.x < X_SCALE and 0 <= self.lander.y < Y_SCALE)
 
     def landing_on_site(self) -> bool:
+        if self.collision_area is None: return False
         return self.collision_area == self.surface.landing_area
 
     def landing_angle(self) -> bool:
@@ -121,7 +122,7 @@ class Environement:
         trajectory = Segment(prev_position, actu_position)
         collision_area = self.surface.they_collide(trajectory)
 
-        if not collision_area is None:
+        if not collision_area is None or self.exit_zone():
             self.collision_area = collision_area
             return True
         else:

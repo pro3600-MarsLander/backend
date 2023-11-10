@@ -42,7 +42,7 @@ class Population:
 
         #Extract the population sorted by score of each chromosome
         self.chromosomes.sort(
-            key=lambda chromosome: self.scores[chromosome.identifier],
+            key=lambda chromosome: self.chromosomes_score[chromosome.identifier],
             reverse=True
         )
         #Take the size_skipped best
@@ -54,8 +54,8 @@ class Population:
         total_score = sum(self.chromosomes_score)
         cumulative_scores = list()
         cumulative_score = 0
-        for chromosome in self:
-            cumulative_score += chromosome.score / total_score 
+        for identifier in range(self.get_length):
+            cumulative_score += self.chromosomes_score[identifier] / total_score 
             cumulative_scores.append(cumulative_score)
             
         paired = False
@@ -72,13 +72,13 @@ class Population:
                     initial_index+=2
                     paired = False
 
-    def mutation(self):
-        final_index = int(self.get_length()*(1 - GRADED_RETAIN_PERCENT))
+    def mutate(self):
+        final_index = int(self.get_length*(1 - GRADED_RETAIN_PERCENT))
         i0, i1 = 0, 1
         for parent0, parent1 in self.cumulative_wheel(0, final_index):               
             child0, child1 = parent0.crossover(parent1)
-            child0.mutation()
-            child1.mutation()
+            child0.mutate()
+            child1.mutate()
             self.chromosomes[i0] = child0
             self.chromosomes[i1] = child1 
             i0 +=1
@@ -96,7 +96,7 @@ class Population:
     def evolution(self):
         #self.generate_score()
         best_chromosome = self.selection()
-        self.mutation()
+        self.mutate()
         #self.population_switch()
         self.reset()
         return best_chromosome

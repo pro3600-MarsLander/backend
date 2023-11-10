@@ -28,8 +28,9 @@ class AlgoType(Enum):
 
 class GeneticAlgorithm(AbstractSolution):
     def __init__(self, 
+                environment : Environement,
                 population_size: int = POPULATION_SIZE, 
-                chromosome_size: int = CHROMOSOME_SIZE
+                chromosome_size: int = CHROMOSOME_SIZE,
                 ):
         self.population_size = population_size
         self.chromosome_size = chromosome_size
@@ -41,7 +42,11 @@ class GeneticAlgorithm(AbstractSolution):
         self.epoch = 0
         self.best_chromosome : AbstractChromosome = None
         self.scoring_manager = ScoringManager()
-        self.evolution()
+        self.evolution(environment)
+
+    @property
+    def get_index_best(self):
+        return self.best_chromosome.identifier
 
     def get_parameters(self) -> dict:
         return {
@@ -50,34 +55,54 @@ class GeneticAlgorithm(AbstractSolution):
             "Epoch number" : self.epoch
         }
     
-    def use(self, environment: Environement):
+    def use(self, **kargs):
         action = self.best_chromosome.use()
         return action
     
     def evolution(self, environment: Environement):
-        while self.epoch<MAXIMUM_EPOCH and not done:
+        while self.epoch < MAXIMUM_EPOCH:
             done = self.one_evolution(environment)
-            self.epoch +=1
             
+            if done: break
+            
+    def use_chromosome(self, chromosome_index, environment):
+        done = False
+        environment.reset()
+        trajectory = []
+        while not done:
+            action = self.population.chromosomes[chromosome_index].use()
+            done = environment.step(action)
+            trajectory.append((environment.lander.x, environment.lander.y))
+        if environment.successful_landing():
+            self.best_chromosome = self.population.chromosomes[chromosome_index]
+            self.best_chromosome.reset()
+            return True, trajectory, 0
+        score = self.scoring_manager.compute_score(environment)
+        self.population.set_score(chromosome_index, score)
+        environment.reset()
+        return False, trajectory, score
+
 
     def one_evolution(self, environment: Environement):
+        self.epoch +=1  
         if self.epoch == MAXIMUM_EPOCH:
             raise Exception("The maximum epoch has been reached")
+        print("Evolution starting")
+        trajectories = [[] for _ in range(self.population_size)]
+        scores = [0]*self.population_size
         self.population.reset()
         for chromosome_index in range(self.population_size):
-            done = False
-            while not done:
-                action = self.population.chromosomes[chromosome_index].use()
-                done = environment.step(action)
-            if environment.successful_landing():
-                self.best_chromosome = self.population.chromosomes[chromosome_index]
-                self.best_chromosome.reset()
-                return True
-            score = self.scoring_manager.compute_score(environment)
-            self.population.set_score(chromosome_index, score)
-            environment.reset()
+            print("Chromosome index :", chromosome_index)
+            done, trajctory, score = self.use_chromosome(chromosome_index, environment)
 
+            trajectories[chromosome_index] = trajctory
+            scores[chromosome_index] = score
+            
+            if done:
+                return done, trajectories
+        print("Evolution ending")
+        print("Score max :", max(scores))
         self.best_chromosome = self.population.evolution()
         self.population.reset()
-        return False
+        return False, trajectories
 

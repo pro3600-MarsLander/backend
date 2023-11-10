@@ -3,10 +3,11 @@ from numpy import sqrt
 from environment.environment import Environement
 from environment.entities.lander import Lander
 from environment.surface import Surface
+from environment.utils.constants import X_SCALE, Y_SCALE
 from utils.point import Point
 from utils.segment import Segment
 
-from score.utils.constants import SCORE_MAX_LANDING_OFF_SITE, SCORE_MIN_LANDING_ON_SITE
+from score.utils.constants import SCORE_MAX_LANDING_OFF_SITE, SCORE_MIN_LANDING_ON_SITE, MAX_SPEED, SCORING_H_SPEED, SCORING_V_SPEED
 
 class ScoringManager:
     """
@@ -15,6 +16,9 @@ class ScoringManager:
 
     def landing_distance(self, surface: Surface, lander: Lander, collision_land: Segment):
         """ Calculate the distance by "walke" of the collision to the landing site"""
+        if collision_land is None:
+            return X_SCALE*Y_SCALE
+        
         if collision_land == surface.landing_area:
             return 0
 
@@ -51,12 +55,12 @@ class ScoringManager:
         
         return round(SCORE_MAX_LANDING_OFF_SITE*(1 - abs(distance)/kargs.get("surface").length))
 
-    def scoring_speed(self, **kargs):
-        if kargs.get("on_site"):
-            score = max(0, 100*(1 - abs(kargs.get("lander").v_speed)/200))
-            score += max(0, 80*(1 - abs(kargs.get("lander").h_speed)/200))
+    def scoring_speed(self, environment: Environement):
+        if environment.landing_on_site():
+            score = max(0, SCORING_V_SPEED*(1 - abs(environment.lander.v_speed)/MAX_SPEED))
+            score += max(0, SCORING_H_SPEED*(1 - abs(environment.lander.h_speed)/MAX_SPEED))
         else:
-            abs_speed = sqrt(kargs.get("lander").v_speed**2 + kargs.get("lander").h_speed**2)
+            abs_speed = sqrt(environment.lander.v_speed**2 + environment.lander.h_speed**2)
             score = max(0, round(20*(1 - abs_speed/150))) # 150 : max speed estimated
             score = 0
         return score
@@ -71,7 +75,8 @@ class ScoringManager:
                 lander=environment.lander,
                 collision_land=environment.collision_area
             )
-        speed_score = self.scoring_speed(
-            lander=environment.lander
-        )
+        print(str(environment.lander))
+        speed_score = self.scoring_speed(environment)
+        print(distance_score, speed_score)
+        return distance_score + speed_score
 
