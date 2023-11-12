@@ -51,9 +51,12 @@ class ScoringManager:
     
     def scoring_distance(self, **kargs):
         distance = self.landing_distance(
-            surface=kargs.get("surface"), lander=kargs.get("lander"), collision_land=kargs.get("collision_land"))
+            surface=kargs.get("surface"), lander=kargs.get("lander"), collision_land=kargs.get("collision_land")
+            )
+        if distance == 0:
+            return SCORE_MIN_LANDING_ON_SITE
         
-        return round(SCORE_MAX_LANDING_OFF_SITE*(1 - abs(distance)/kargs.get("surface").length))
+        return max(0, round(SCORE_MAX_LANDING_OFF_SITE*(1 - abs(distance)/kargs.get("surface").length)))
 
     def scoring_speed(self, environment: Environement):
         if environment.landing_on_site():
@@ -77,6 +80,6 @@ class ScoringManager:
             )
         print(str(environment.lander))
         speed_score = self.scoring_speed(environment)
-        print(distance_score, speed_score)
+        print("SCORE :", distance_score, speed_score)
         return distance_score + speed_score
 

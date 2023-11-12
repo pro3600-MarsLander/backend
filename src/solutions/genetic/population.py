@@ -1,5 +1,6 @@
 import random
 
+
 from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
 from solutions.genetic.utils.constants import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
 from solutions.genetic.chromosomes.action_chromosome import ActionChromosome
@@ -12,6 +13,9 @@ class Population:
     def __init__(self, chromosomes: list[AbstractChromosome]):
         self.chromosomes = chromosomes
         self.chromosomes_score = [0]*len(chromosomes)
+        self.population_size = len(chromosomes)
+        self.chromosome_size = chromosomes[0].get_length
+
 
     @staticmethod
     def generator(population_size: int=POPULATION_SIZE, chromosome_size=CHROMOSOME_SIZE, **kargs):
@@ -25,7 +29,6 @@ class Population:
     
     def reset(self):
         for index in range(self.get_length):
-            self.chromosomes_score[index] = 0
             self.chromosomes[index].reset()
     
     def __iter__(self):
@@ -42,8 +45,8 @@ class Population:
 
         #Extract the population sorted by score of each chromosome
         self.chromosomes.sort(
-            key=lambda chromosome: self.chromosomes_score[chromosome.identifier],
-            reverse=True
+            key=lambda chromosome: chromosome.score,
+            reverse=False
         )
         #Take the size_skipped best
         best_chromosome = self.chromosomes[0]
@@ -51,11 +54,11 @@ class Population:
 
     
     def cumulative_wheel(self, initial_index, final_index) -> GeneratorExit(list[AbstractChromosome]):
-        total_score = sum(self.chromosomes_score)
+        total_score = sum(map(lambda chromosome: chromosome.score, self.chromosomes))
         cumulative_scores = list()
         cumulative_score = 0
         for identifier in range(self.get_length):
-            cumulative_score += self.chromosomes_score[identifier] / total_score 
+            cumulative_score += self.chromosomes[identifier].score / total_score 
             cumulative_scores.append(cumulative_score)
             
         paired = False
@@ -75,14 +78,25 @@ class Population:
     def mutate(self):
         final_index = int(self.get_length*(1 - GRADED_RETAIN_PERCENT))
         i0, i1 = 0, 1
+        new_chromosomes = []
         for parent0, parent1 in self.cumulative_wheel(0, final_index):               
             child0, child1 = parent0.crossover(parent1)
             child0.mutate()
             child1.mutate()
-            self.chromosomes[i0] = child0
-            self.chromosomes[i1] = child1 
-            i0 +=1
-            i1 +=1
+            new_chromosomes.append(child0)
+            new_chromosomes.append(child1)
+
+            # self.chromosomes[i0] = child0
+            # self.chromosomes[i1] = child1 
+            # i0 +=1
+            # i1 +=1
+        self.chromosomes = new_chromosomes.copy()
+
+    def fill_with_new_chromosome(self):
+        for identifier in range(self.population_size - len(self.chromosomes)):
+            self.chromosomes.append(
+                ActionChromosome.generator(identifier=identifier, chromosome_size=CHROMOSOME_SIZE)
+            )
 
     def population_switch(self):
         self.chromosomes = [
@@ -91,12 +105,16 @@ class Population:
         self.new_chromosomes = []
 
     def set_score(self, index, score):
-        self.chromosomes_score[index] += score
+        self.chromosomes[index].score += score
+        # identifier = self.chromosomes[index].identifier
+        # self.chromosomes_score[identifier] += score
+        #self.chromosomes_score[index] += score
 
     def evolution(self):
         #self.generate_score()
         best_chromosome = self.selection()
         self.mutate()
+        self.fill_with_new_chromosome()
         #self.population_switch()
         self.reset()
         return best_chromosome

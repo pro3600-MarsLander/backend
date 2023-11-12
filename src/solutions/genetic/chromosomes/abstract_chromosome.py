@@ -10,10 +10,16 @@ class AbstractChromosome:
     def __init__(self, identifier: int, genes_):
         self.identifier = identifier
         self.genes = genes_
+        self.score = 0
         
     @staticmethod
     @abstractmethod
     def generator(**kargs):
+        pass
+
+
+    @property
+    def get_length(self):
         pass
 
     @abstractmethod
@@ -25,4 +31,4 @@ class AbstractChromosome:
         pass
 
     def reset(self):
-        pass
+        self.score = 0

@@ -15,7 +15,7 @@ from solutions.genetic.genetic_algorithm import GeneticAlgorithm
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def main():
-    points, initial_state = load_map(LEVEL_ONE)
+    points, initial_state = load_map(CAVE_REVERSED)
     # with open(map_path, "r") as json_file:
     #     map = json.load(json_file)
 

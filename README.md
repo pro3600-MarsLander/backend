@@ -1,5 +1,14 @@
 # Mars Lander
 
+## Utilisation
+
+Le fichier launcher lance la simulation.
+Dedans vous pouvez modifier les maps employés. 
+```bash
+python3 launcher.py
+```
+
+
 ## Environement 
 
 

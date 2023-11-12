@@ -32,6 +32,7 @@ class ActionChromosome(AbstractChromosome):
                 gene.mutate()
 
     def reset(self):
+        super().reset()
         self.iterator = 0
 
     def use(self):
