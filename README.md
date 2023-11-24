@@ -5,15 +5,75 @@
 Le fichier launcher lance la simulation.
 Dedans vous pouvez modifier les maps employés. 
 ```bash
-python3 launcher.py
+python3 src/launcher.py
 ```
 
 
+Des commandes permettent ensuite de :
+* flèche droite : Faire évoluer une population
+* touche q : quitte la simulation
+
+Si une trajectoire qui fonctionne a été trouvé, elle s'affichera toute seule et en vert.
+
 ## Environement 
+### Surface
+La surface est initialiser à l'aide d'une liste de point.
+Elle transformera cette liste en une liste de segment.
+
+#### Méthodes
+* is_landing_area(segment: Segment) 
+    * vérifie si la zone donné en argument est une zone d'atterissage.
+* they_collide(trajectory: Segment) 
+  * trajectory représente la trajectoire tracer entre deux frames
+  * vérifie si la trajectoire à traverser la surface
+* get_points 
+  * retourne l'ensemble des points qui compose la surface de droites à gauche
+
+#### Entity
+Objet représentant une entité, il est caractériser par :
+* position : x, y
+* vitesse : h_speed, v_speed
+
+#### Méthodes
+* update(attributs)
+  * met à jour avec les valeurs d'attributs 
+* get_state -> [x, y, h_speed, v_speed]
+* copy(other)
+  * Copie les attributs de other dans self
+  
+### Lander
+Objet représentant le lander, il est caractériser par :
+* position : x, y
+* vitesse : h_speed, v_speed
+* fuel 
+* rotate
+* power
+
+### Environment
+La classe environment permet de générer la surface et le lander à l'aide de points et de conditions initiales.
+
+#### Méthodes
+* reset 
+  * Remet au paramètre initiaux le lander
+* exit_zone -> bool
+  * Indique si le lander est bien dans le cadre de la carte
+* next_dynamics_parameters(rotate, power) -> x, y, h_speed, v_speed
+  * Retourne le prochain état selon l'action 
+* step(action) -> bool
+  * Joue une étape de l'environment 
+  * Retourne vrai si la partie est finie
 
 
-
-
+* landing_on_site -> bool 
+  * Indique si la zone de collision est zone d'atterissage
+* landing_angle -> bool
+  * Indique si le lander atterit  bien droit
+* landing_vertical_speed -> bool
+  * Indique si la vitesse vertical d'atterrissage n'est pas trop élevé
+* landing_horizontal_speed -> bool
+  * Indique si la vitesse horizontal d'atterrissage n'est pas trop élevé
+* Successful_landing -> bool
+  * Indique si l'atterrisage est un succès
 
 ## Fonction de score
 Pour employer des méthodes analytiques tel que l'algorithme génétique, il faudra déterminer une fonction de score. Cette fonction permettra de donner une note pour une trajectoire donnée et ses paramètres.
@@ -36,3 +96,28 @@ Pareil que la vitesse
 #### Autres
 
 Lorsque j'écris ceci, je me demande si il ne serait pas interressant de créer un score en fonction de l'amélioration d'une trajectoire qui a pour source deux autres trajectoires. Cela me fait penser notamenent au régulateur PID, ce sera peut être le sujet d'une amélioration.
+
+
+## Solution
+
+La classe solution permet la création de solution informatique. Cette solution peut employer l'environement pour pouvoir s'entrainer.
+
+### Créer sa solution
+
+Afin d'ajouter sa solution il faut créer un dossier solution contenant au moins une classe qui hérite de AbstractSolution et d'un fichier config contenant les paramètres par défaut de la solution qui seront changeable dans l'interface graphique.
+
+
+### Methodes
+
+* get_parameters : Renvoi les paramètres de la solution que l'on souhaite afficher.
+* use(environement) : Renvoi l'action a appliquer pour cette étape
+
+### Interface graphique : TODO
+
+Grace à get_parameters on a une idée des paramètres de la solution mais les changer à la main requiert du temps.
+C'est pourquoi je vais stocker dans un fichier config pour chaque solution ces hyperparamètres qui pourraient alors être changé durant une simulation.
+
+#### Config
+Le fichier config contient la valeur par défaut des paramètres et peut être modifier dans le GUI.
+
+

@@ -2,7 +2,7 @@ import random
 
 
 from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
-from solutions.genetic.utils.constants import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
+from solutions.genetic.config import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
 from solutions.genetic.chromosomes.action_chromosome import ActionChromosome
 
 chromosome_type=ActionChromosome

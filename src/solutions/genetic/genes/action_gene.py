@@ -2,7 +2,7 @@ import random
 
 from environment.action import Action
 from solutions.genetic.genes.abstract_gene import AbstractGene
-from solutions.genetic.utils.constants import WEIGHTS_POWER, WEIGHTS_ROTATION
+from solutions.genetic.config import WEIGHTS_POWER, WEIGHTS_ROTATION
 class ActionGene(AbstractGene, Action):
 
 

@@ -95,6 +95,7 @@ class Gui:
                 start_point = end_point
 
         return done
+    
       
     def pygame_step(self, success, manual_step=False):
         
@@ -108,16 +109,19 @@ class Gui:
         if manual_step:
             while True:
                 event = pygame.event.wait()
-                if success:
-                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                        success = False
-                        break
-                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
-                        quit_gui()
+                if event.type == pygame.KEYDOWN:
+                    if success:
+                        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                            success = False
+                            break
+                        elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                            quit_gui()
 
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT:
-                        break
+                    else:
+                        if event.key == pygame.K_RIGHT:
+                            break
+
+                        
                         
                 if event.type == pygame.QUIT:
                     quit_gui()

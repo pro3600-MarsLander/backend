@@ -2,7 +2,7 @@ import random
 from environment.action import Action
 from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
 from solutions.genetic.genes.action_gene import ActionGene
-from solutions.genetic.utils.constants import CHROMOSOME_MUTATION_PROBABILITY
+from solutions.genetic.config import CHROMOSOME_MUTATION_PROBABILITY
 
 
 class ActionChromosome(AbstractChromosome):

@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, auto
 
 from environment.environment import Environement
 
@@ -10,7 +10,7 @@ from solutions.genetic.population import Population
 from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
 from solutions.genetic.chromosomes.action_chromosome import ActionChromosome
 from solutions.genetic.genes.action_gene import ActionGene
-from solutions.genetic.utils.constants import POPULATION_SIZE, CHROMOSOME_SIZE, MAXIMUM_EPOCH
+from solutions.genetic.config import POPULATION_SIZE, CHROMOSOME_SIZE, MAXIMUM_EPOCH
 
 
 
@@ -105,4 +105,3 @@ class GeneticAlgorithm(AbstractSolution):
         self.best_chromosome = self.population.evolution()
         self.population.reset()
         return False, trajectories
-
