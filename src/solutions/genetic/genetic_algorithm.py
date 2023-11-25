@@ -47,6 +47,9 @@ class GeneticAlgorithm(AbstractSolution):
     @property
     def get_index_best(self):
         return self.best_chromosome.identifier
+    
+    def reset(self, environement):
+        self.__init__(environment=environement)
 
     def get_parameters(self) -> dict:
         return {
@@ -54,7 +57,7 @@ class GeneticAlgorithm(AbstractSolution):
             "Chromosome size": self.chromosome_size,
             "Epoch number" : self.epoch
         }
-    
+
     def use(self, **kargs):
         action = self.best_chromosome.use()
         return action
@@ -87,12 +90,10 @@ class GeneticAlgorithm(AbstractSolution):
         self.epoch +=1  
         if self.epoch == MAXIMUM_EPOCH:
             raise Exception("The maximum epoch has been reached")
-        print("Evolution starting")
         trajectories = [[] for _ in range(self.population_size)]
         scores = [0]*self.population_size
         self.population.reset()
         for chromosome_index in range(self.population_size):
-            print("Chromosome index :", chromosome_index)
             done, trajctory, score = self.use_chromosome(chromosome_index, environment)
 
             trajectories[chromosome_index] = trajctory
@@ -100,8 +101,6 @@ class GeneticAlgorithm(AbstractSolution):
             
             if done:
                 return done, trajectories
-        print("Evolution ending")
-        print("Score max :", max(scores))
         self.best_chromosome = self.population.evolution()
         self.population.reset()
         return False, trajectories

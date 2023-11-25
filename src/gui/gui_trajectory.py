@@ -9,6 +9,7 @@ from environment.entities.lander import Lander
 from environment.utils.constants import X_SCALE, Y_SCALE
 
 from gui.gui_sr import Gui
+from gui.log import trajectory_gui_log
 
 from solutions.abstract_solution import AbstractSolution
 
@@ -23,13 +24,13 @@ fx = lambda x : int(WINDOW_WIDTH * x / X_SCALE)
 fy = lambda y : WINDOW_HEIGHT - int(WINDOW_HEIGHT * y / Y_SCALE)
 
 
-
 class GuiTrajectory:
     
     def __init__(self, environment: Environement, solution : AbstractSolution):
         self.environment = environment
         self.solution = solution
         self.env_iterator = 0
+        print(trajectory_gui_log, file=sys.stderr)
         # PYGAME INITIALIZER
         pygame.init()
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -76,8 +77,6 @@ class GuiTrajectory:
                 width=width
             )
             
-
-
     def step(self):        
         """
         This is a step for each evolution
@@ -110,14 +109,12 @@ class GuiTrajectory:
             )
 
     def pygame_step(self, success, manual_step=True):
-        
-        pygame.display.flip()
-        pygame.event.wait()
-
         def quit_gui():
             pygame.display.quit()
             pygame.quit()
             sys.exit()
+        pygame.display.flip()
+        pygame.event.wait()
         if manual_step:
             while True:
                 event = pygame.event.wait()
@@ -127,16 +124,12 @@ class GuiTrajectory:
                         break
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                         quit_gui()
-
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
                         break
-                        
                 if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                     quit_gui()
-
         self.render_reset()
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.display.quit()

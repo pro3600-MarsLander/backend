@@ -121,3 +121,31 @@ C'est pourquoi je vais stocker dans un fichier config pour chaque solution ces h
 Le fichier config contient la valeur par défaut des paramètres et peut être modifier dans le GUI.
 
 
+## Interface graphique (GUI)
+
+L'interface graphique permet d'observer les différentes solutions proposées.
+
+## Fonctionnement
+
+Son fonctionnement est étroitement lié à la solution créer car différents type d'observation peuvent être proposés. 
+* Dynamique : avec un frame, affiche la trajectoire se dessiner au file du temps (sera fait plus tard)
+* Statique unique : écrit la trajectoire proposé par la solution
+* Statique multiple : écrit plusieurs trajectoire en même temps 
+  
+Statique multiple voit son utilité dans l'étude de solution heuristique dans lesquelles il y a une évolution de la stratégie au fur et à mesure des simulations.
+
+## Architecture
+  
+On veut retrouver dans cette interface graphique différentes fonctionnalités :
+* Affichage du jeu (évidemment)
+* Accès à des commandes (Exemple : pilotage du vaisseau, évolution de la population, ou simplement l'accès au settings)
+* Modification de paramètres dans les settings (Exemple : sensibilité pour la commande manuel ou bien la taille de la population dans le cas de GA)
+  
+### Paramètres attendus en fonctions des modes
+
+### Statique
+La solution produit une liste de trajectoire à chaque tour, ainsi on laisse à la solution le choix d'afficher le nombre de trajectoire. De plus par défaut pour passer au tracer de la/les prochaines trajectoires, par défaut, ce sera manuel mais on peut imaginer ajouter un fréquence d'affichage.
+
+
+
+

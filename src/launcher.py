@@ -25,7 +25,6 @@ def main():
     surface = Surface(points)
     environment = Environement(surface, initial_state)
     solution = GeneticAlgorithm(environment)
-    print(solution.best_chromosome)
     gui = GuiTrajectory(environment, solution)
     gui.run()
 

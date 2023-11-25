@@ -78,8 +78,6 @@ class ScoringManager:
                 lander=environment.lander,
                 collision_land=environment.collision_area
             )
-        print(str(environment.lander))
         speed_score = self.scoring_speed(environment)
-        print("SCORE :", distance_score, speed_score)
         return distance_score + speed_score
 

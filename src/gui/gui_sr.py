@@ -35,7 +35,6 @@ class Gui:
         pygame.init()
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.font = pygame.font.Font(None, 36)
-        
 
     def screen_reset(self):
         self.display.fill(BLACK)
