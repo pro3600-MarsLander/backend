@@ -31,3 +31,5 @@ class Segment:
         """Look if the segment self and [other.point_a, other.point_b] segment's intersect"""
         return Segment.ccw(self.point_a, other.point_a,other.point_b) != Segment.ccw(self.point_b, other.point_a, other.point_b) \
             and Segment.ccw(self.point_a, self.point_b, other.point_a) != Segment.ccw(self.point_a, self.point_b, other.point_b)
+    
+    
