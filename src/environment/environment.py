@@ -73,22 +73,20 @@ class Environement:
             self.landing_horizontal_speed()
             )
   
-    
-    
-    def next_dynamics_parameters(self, rotate, power):
+    def next_dynamics_parameters(self, rotate, power, dt=1):
         
         h_accel = - power * math.sin(rotate*math.pi/180) 
         v_accel = power * math.cos(rotate*math.pi/180) + MARS_GRAVITY   
 
-        h_speed = self.lander.h_speed + h_accel
-        v_speed = self.lander.v_speed + v_accel
+        h_speed = self.lander.h_speed + h_accel*dt
+        v_speed = self.lander.v_speed + v_accel*dt
 
-        x = self.lander.x + self.lander.h_speed + h_accel/2
-        y = self.lander.y + self.lander.v_speed + v_accel/2
+        x = self.lander.x + dt*self.lander.h_speed + h_accel/2
+        y = self.lander.y + dt*self.lander.v_speed + v_accel/2
 
         return x, y, h_speed, v_speed
 
-    def step(self, action: Action) -> bool:
+    def step(self, action: Action, dt=1) -> bool:
         """        
         -rotate is the desired rotation angle for Mars lander. 
         Please note that for each turn the actual value of the angle 
@@ -110,12 +108,12 @@ class Environement:
             self.lander.power + action.power
         ))
         
-        fuel = self.lander.fuel - power
+        fuel = int(self.lander.fuel - power*dt)
         if fuel <= 0 :
             power = self.lander.fuel
             fuel = 0
 
-        x, y, h_speed, v_speed = self.next_dynamics_parameters(rotate, power)
+        x, y, h_speed, v_speed = self.next_dynamics_parameters(rotate, power, dt)
         prev_position = Point(self.lander.x, self.lander.y)
         self.lander.update(x=x, y=y, h_speed=h_speed, v_speed=v_speed, fuel=fuel, rotate=rotate, power=power)
         actu_position = Point(self.lander.x, self.lander.y)

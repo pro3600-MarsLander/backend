@@ -15,7 +15,7 @@ class Action:
             action of power
     """
 
-    def __init__(self, rotate : int, power : int):
+    def __init__(self, rotate : int=0, power : int=0):
         self.rotate = clamp(rotate, -ACTION_ROTATE_SCALE, ACTION_ROTATE_SCALE)
         self.power = clamp(power, -ACTION_POWER_SCALE, ACTION_POWER_SCALE)
 

@@ -47,3 +47,4 @@ class Lander(Entity):
         return [self.x, self.y, self.h_speed, self.v_speed, self.fuel, self.rotate, self.power]
 
         
+

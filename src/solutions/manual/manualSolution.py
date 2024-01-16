@@ -1,27 +1,33 @@
 import pygame
+import sys
 from solutions.abstract_solution import AbstractSolution
 from environment.action import Action
+
 class ManualSolution(AbstractSolution):
     @property
-    @abstractmethod
+    
     def get_parameters(self) -> dict:
         return {}
 
-    @abstractmethod
-    def use(self, environement=None) -> Action:
+    
+    def use(self, environment=None) -> Action:
         """
         By given some parameters, use return the next action the lander have to make
         """
-        event = pygame.event.wait()
         action = Action()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
-            action.rotate = 5
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
-            action.rotate = -5
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
-            action.power = 1
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-            action.power = -1
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    action.rotate = 5
+                if event.key == pygame.K_LEFT:
+                    action.rotate = -5
+                if event.key == pygame.K_UP:
+                    action.power = 1
+                if event.key == pygame.K_DOWN:
+                    action.power = -1
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
             
         return action
 

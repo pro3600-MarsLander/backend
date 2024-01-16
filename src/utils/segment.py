@@ -9,6 +9,10 @@ class Segment:
         return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x)
 
     def __init__(self, point_a : Point, point_b : Point ):
+        if isinstance(point_a, list):
+            point_a = Point(*point_a)
+        if isinstance(point_b, list):
+            point_b = Point(*point_b)
         self.point_a = point_a
         self.point_b = point_b
     

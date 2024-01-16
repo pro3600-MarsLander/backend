@@ -14,27 +14,31 @@ from environment.entities.lander import Lander
 from environment.utils.constants import X_SCALE, Y_SCALE
 
 from solutions.abstract_solution import AbstractSolution
+from solutions.manual.manualSolution import ManualSolution 
 
 from utils.point import Point
 from utils.segment import Segment
 
 from maps.basic_map_1 import MAP
-from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN
-
+from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN, LANDERS_PATH
+from gui.log import manual_gui_log
 
 fx = lambda x : int(WINDOW_WIDTH * x / X_SCALE)
 fy = lambda y : WINDOW_HEIGHT - int(WINDOW_HEIGHT * y / Y_SCALE)
 
-
+lander_image_path = os.path.join(LANDERS_PATH, 'lander_0.png')
 class Gui:
     def __init__(self, environment: Environement, solution : AbstractSolution):
         self.environment = environment
         self.solution = solution
         self.env_iterator = 0
+        if isinstance(solution, ManualSolution):
+            print(manual_gui_log, file=sys.stderr)
         # PYGAME INITIALIZER
         pygame.init()
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.font = pygame.font.Font(None, 36)
+        self.lander_image = pygame.image.load(lander_image_path)
 
     def screen_reset(self):
         self.display.fill(BLACK)
@@ -64,14 +68,54 @@ class Gui:
                 [fx(line.point_b.x), fy(line.point_b.y)]
             )
 
+    # def draw_lander(self, lander: Lander):
+    #     rotated_image = pygame.transform.rotate(self.lander_image, lander.rotate)
+    #     new_rect = rotated_image.get_rect(center = self.lander_image.get_rect(center = (lander.x, lander.y)).center)
+        
+    #     self.display.blit(rotated_image, new_rect)
 
-    def step(self):        
+    # def draw_lander(self, lander: Lander):
+    #     rotated_image = pygame.transform.rotate(self.lander_image, lander.rotate)
+    #     new_rect = rotated_image.get_rect(center=self.lander_image.get_rect(center=(lander.x, lander.y)).center)
+
+    #     surface = pygame.Surface((15 * 2, 15 * 2), pygame.SRCALPHA)
+    #     surface.blit(rotated_image, new_rect)
+
+    #     self.display.blit(surface, (lander.x - 15, lander.y - 15))
+
+    def draw_lander(self, lander):
+        pygame.draw.circle(self.display, WHITE, (fx(int(lander.x)), fy(int(lander.y))), 15)
+        
+
+    def write_parameters(self, lander: Lander):
+        self.display_text(
+            "Parameters : ",
+            (80, 100)
+        )
+        self.display_text(
+            "Coordonates : ({}, {})".format(int(lander.x), int(lander.y)),
+            (100, 130)
+        )
+        self.display_text(
+            "Velocity : ({}, {})".format(int(lander.v_speed), int(lander.h_speed)),
+            (100, 160)
+        )
+        self.display_text(
+            "Power, angle : {}, {}".format(lander.power, lander.rotate),
+            (100, 190)
+        )
+        self.display_text(
+            "Fuel : {}".format(lander.fuel),
+            (100, 220)
+        )
+        
+    def step(self, dt=1):        
         action = self.solution.use(environment = self.environment)
-        done = self.environment.step(action)
+        done = self.environment.step(action, dt)
         lander_position = (fx(self.environment.lander.x), fy(self.environment.lander.y))
         self.trajectory.append(lander_position)
         #pygame.transform.rotate(self.lander_image,self.rotate)
-        pygame.draw.line(self.display, WHITE, lander_position, lander_position)
+        # pygame.draw.line(self.display, WHITE, lander_position, lander_position)
         if done :
             if self.environment.successful_landing():
                 self.env_iterator -=1
@@ -97,44 +141,48 @@ class Gui:
     
       
     def pygame_step(self, success, manual_step=False):
-        
-        pygame.display.flip()
-        pygame.event.wait()
+
+        self.write_parameters(self.environment.lander)
+        self.draw_lander(self.environment.lander)
 
         def quit_gui():
             pygame.display.quit()
             pygame.quit()
             sys.exit()
-        if manual_step:
-            while True:
-                event = pygame.event.wait()
-                if event.type == pygame.KEYDOWN:
-                    if success:
-                        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                            success = False
-                            break
-                        elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
-                            quit_gui()
 
-                    else:
-                        if event.key == pygame.K_RIGHT:
-                            break
 
-                        
-                        
-                if event.type == pygame.QUIT:
-                    quit_gui()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if success:
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        success = False
+                        break
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                        quit_gui()
 
+                else:
+                    if event.key == pygame.K_RIGHT:
+                        break
+
+                    
+            if event.type == pygame.QUIT:
+                quit_gui()
+
+
+        pygame.display.flip()
         self.render_reset()
-        self.display_text(
-            "Parameters : ",
-            (400, 100)
-        )
-        for order, (name, value) in enumerate(self.solution.get_parameters()):
-            self.display_text(
-                f"{name} : {value}",
-                (400, 130 + order*30)
-            )
+
+        
+        # self.display_text(
+        #     "Parameters : ",
+        #     (400, 100)
+        # )
+
+        # for order, (name, value) in enumerate(self.solution.get_parameters().items()):
+        #     self.display_text(
+        #         f"{name} : {value}",
+        #         (400, 130 + order*30)
+        #     )
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -147,7 +195,7 @@ class Gui:
         self.reset()
         self.render_reset()
         while not done:
-            done = self.step()
+            done = self.step(1/FRAMES_PER_SECOND)
             self.pygame_step(done)
             time.sleep(1/FRAMES_PER_SECOND)
 

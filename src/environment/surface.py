@@ -13,7 +13,7 @@ class Surface:
             land = Segment(points[i], points[i+1])
             self.lands.append(land)
             self.length += land.lenght()
-            if points[i].y == points[i+1].y:
+            if points[i][1] == points[i+1][1]:
                 self.landing_area = land
                 
     def is_landing_area(self, segment):
