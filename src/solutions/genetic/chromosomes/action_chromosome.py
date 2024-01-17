@@ -14,6 +14,9 @@ class ActionChromosome(AbstractChromosome):
         super().__init__(genes_=genes_, identifier=identifier)
         self.iterator = 0
 
+    def __len__(self):
+        return len(self.genes)
+
     def __str__(self) -> str:
         """Return a string representation of the chromosome"""
         return f"Chromosome {self.identifier} : {len(self.genes)}"

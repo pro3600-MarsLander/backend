@@ -43,7 +43,7 @@ class Environment:
         self.lander.update(**self.initial_state)
 
     def exit_zone(self) -> bool:
-        """Check if the drone has exit the drone"""
+        """Check if the lander is out of the map"""
         return not (0 <= self.lander.x < X_SCALE and 0 <= self.lander.y < Y_SCALE)
 
     def landing_on_site(self) -> bool:

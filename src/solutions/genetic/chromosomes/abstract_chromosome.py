@@ -12,6 +12,10 @@ class AbstractChromosome:
         self.genes = genes_
         self.score = 0
         
+
+    def __len__(self):
+        return len(self.genes)
+    
     @staticmethod
     @abstractmethod
     def generator(**kargs):

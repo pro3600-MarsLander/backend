@@ -1,20 +1,33 @@
 from numpy import sqrt
-
+from numpy.linalg import norm
 from environment.environment import Environment
 from environment.entities.lander import Lander
 from environment.surface import Surface
-from environment.utils.constants import X_SCALE, Y_SCALE
+from environment.utils.constants import X_SCALE, Y_SCALE, ROTATE_SCALE
+
 from utils.point import Point
 from utils.segment import Segment
 
 from score.utils.constants import (
     SCORE_MAX_LANDING_OFF_SITE, SCORE_MIN_LANDING_ON_SITE,
-    MAX_SPEED, SCORING_H_SPEED, SCORING_V_SPEED, SCORING_SPEED
+    MAX_SPEED, SCORING_H_SPEED, SCORING_V_SPEED, SCORING_SPEED,
+    SCORING_BEST_ANGLE, SCORING_ANGLE
 )
 
 class ScoringManager:
     """
     This class will permit to compute the score from the environments and the lander.
+
+    For distance :
+    If it lands on site, his score will be above a certain level. 
+    Otherwise it depends of the distance with a lower maximum level.
+
+    For speed :
+    If it lands on site, it will be a combination of the vertical and horizontal speed.
+    Otherwise, it will be the norm of the speed.
+
+    For angle :
+
     """
 
     def landing_distance(self, surface: Surface, lander: Lander, collision_land: Segment):
@@ -25,6 +38,7 @@ class ScoringManager:
         """
         if collision_land is None:
             return X_SCALE*Y_SCALE
+        
         
         if collision_land == surface.landing_area:
             return 0.0
@@ -55,47 +69,64 @@ class ScoringManager:
                     break
         return distance
     
+
+    def scoring_distance_off_site(self, distance, surface_length):
+        """Compute the score of the distance from the landing site"""
+        return max(0, round(SCORE_MAX_LANDING_OFF_SITE*(1 - abs(distance)/surface_length)))
     
-    def scoring_distance(self, **kargs):
-        """Compute the score of the distance from the landing site
+    def scoring_distance_on_site(self):
+        """Compute the score of the distance from the landing site"""
+        return SCORE_MIN_LANDING_ON_SITE
         
-        If it lands on it, his score will be above a certain level. 
-        Otherwise it depends of the distance with a lower maximum level.
-        """
-        distance = self.landing_distance(
-            surface=kargs.get("surface"), lander=kargs.get("lander"), collision_land=kargs.get("collision_land")
-            )
-        if distance == 0:
-            return SCORE_MIN_LANDING_ON_SITE
         
-        return max(0, round(SCORE_MAX_LANDING_OFF_SITE*(1 - abs(distance)/kargs.get("surface").length)))
-
-    def scoring_speed(self, environment: Environment):
-        """Compute speed score
-        If it lands on site, it compute a score by taking vertical and horizontal speed differently
-
-        Otherwise, it take the norm of the speed to calculate the score
+    def scoring_speed_on_site(self, lander: Lander, on_site: bool):
+        """Compute speed score"""
+        score = max(0, SCORING_V_SPEED*(1 - abs(lander.v_speed)/MAX_SPEED))
+        score += max(0, SCORING_H_SPEED*(1 - abs(lander.h_speed)/MAX_SPEED))
+        return score 
+    
+    def scoring_speed_off_site(self, lander: Lander, on_site: bool):
+        """Compute speed score"""
+        speed_norm = norm([lander.v_speed, lander.h_speed])
+        return max(0, SCORING_SPEED*(1 - speed_norm/MAX_SPEED))
+    
+    def scoring_angle(self, lander):
+        """Compute the score of the angle of the lander
         """
-        if environment.landing_on_site():
-            score = max(0, SCORING_V_SPEED*(1 - abs(environment.lander.v_speed)/MAX_SPEED))
-            score += max(0, SCORING_H_SPEED*(1 - abs(environment.lander.h_speed)/MAX_SPEED))
-        else:
-            abs_speed = sqrt(environment.lander.v_speed**2 + environment.lander.h_speed**2)
-            score = max(0, round(SCORING_SPEED*(1 - abs_speed/150))) # 150 : max speed estimated
-            score = 0
-        return score
+        if lander.rotate == 0:
+            return SCORING_BEST_ANGLE
+        
+        return SCORING_ANGLE*(1 - abs(lander.rotate)/ROTATE_SCALE)
+        
 
     def compute_score(self, environment: Environment):
         """Compute the global score"""
-        on_site = environment.landing_on_site()
-        if on_site:
-            distance_score = SCORE_MIN_LANDING_ON_SITE
-        else:
-            distance_score = self.scoring_distance(
-                surface=environment.surface,
-                lander=environment.lander,
-                collision_land=environment.collision_area
+        
+        if environment.exit_zone():
+            return 0
+        
+        if environment.landing_on_site():
+            distance_score = self.scoring_distance_on_site()
+            speed_score = self.scoring_speed_on_site(
+                lander=environment.lander, 
+                on_site=environment.landing_on_site()
             )
-        speed_score = self.scoring_speed(environment)
-        return distance_score + speed_score
-
+            angle_score = self.scoring_angle(environment.lander)
+            score = distance_score + speed_score + angle_score
+            return max(SCORE_MIN_LANDING_ON_SITE, score)
+        
+        else:
+            distance_score = self.scoring_distance_off_site(
+                distance=self.landing_distance(
+                    surface=environment.surface,
+                    lander=environment.lander,
+                    collision_land=environment.collision_area
+                ),
+                surface_length=environment.surface.length
+            )
+            speed_score = self.scoring_speed_off_site(
+                lander=environment.lander, 
+                on_site=environment.landing_on_site()
+            )
+            score = distance_score + speed_score
+            return min(SCORE_MAX_LANDING_OFF_SITE, score)

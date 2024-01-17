@@ -31,6 +31,8 @@ class AlgoType(Enum):
     def get_gene_type(algo_type: int):
         if algo_type == 1:
             return ActionGene
+
+
 ##
     #%%
 
@@ -78,7 +80,8 @@ class GeneticSolution(AbstractSolution):
         return {
             "Population size": self.population_size,
             "Chromosome size": self.chromosome_size,
-            "Epoch number" : self.epoch
+            "Epoch number" : self.epoch,
+            "Best score" : int(self.population.best_score),
         }
 
     def use(self, **kargs):
