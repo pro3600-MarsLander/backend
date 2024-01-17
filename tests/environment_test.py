@@ -1,6 +1,11 @@
 import unittest
 import json
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 from src.utils.point import Point
 from src.utils.segment import Segment
 from src.environment.surface import Surface
@@ -8,7 +13,7 @@ from src.environment.entities.lander import Lander
 from src.environment.environment import Environement
 from src.environment.action import Action
 
-
+print(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class TestEnvironment(unittest.TestCase):
 
@@ -51,3 +56,24 @@ class TestEnvironment(unittest.TestCase):
             test_lander.update(**state)
             environment.step(action)
             self.assertEqual(environment.lander, test_lander)
+
+
+    def test_collision(self):
+        with open("./data/surfaces/flat_surface.json", "r") as json_file:
+            points = json.load(json_file).get('points')
+        surface = Surface(list(map(lambda point: Point(*point), points)))
+        lander_position = Point(3500, 1010)
+        
+        # Collision : 
+        next_lander_position = Point(3500, 990)
+        trajectory = Segment(lander_position, next_lander_position)
+        collision_land = surface.they_collide(trajectory)
+        
+        self.assertTrue(surface.is_landing_area(collision_land))
+
+        next_lander_position = Point(3500, 1001)
+        trajectory = Segment(lander_position, next_lander_position)
+        collision_land = surface.they_collide(trajectory)
+        self.assertIsNone(collision_land)
+        self.assertFalse(surface.is_landing_area(collision_land))
+            

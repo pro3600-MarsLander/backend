@@ -20,7 +20,6 @@ from solutions.genetic.genetic_algorithm import GeneticAlgorithm
 from utils.point import Point
 from utils.segment import Segment
 
-from maps.basic_map_1 import MAP
 from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN, LANDERS_PATH
 from gui.log import manual_gui_log, trajectory_gui_log
 
