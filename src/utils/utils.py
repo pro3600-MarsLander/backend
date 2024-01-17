@@ -8,6 +8,7 @@ from utils.point import Point
 folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 
 def load_map(map_name):
+    """Convert a json map into his initial points and the lander initial state"""
     map_path = os.path.join(folder_path, "data/maps", map_name)
     with open(map_path, "r") as json_file:
         map = json.load(json_file)

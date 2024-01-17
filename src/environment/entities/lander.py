@@ -44,6 +44,7 @@ class Lander(Entity):
             return "lander not yiet initialized"
         
     def get_state(self):
+        """Get a list of the state"""
         return [self.x, self.y, self.h_speed, self.v_speed, self.fuel, self.rotate, self.power]
 
         

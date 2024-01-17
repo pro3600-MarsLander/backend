@@ -6,12 +6,16 @@ from solutions.genetic.config import CHROMOSOME_MUTATION_PROBABILITY
 
 
 class ActionChromosome(AbstractChromosome):
-
+    """The chromosome is a sequel of action
+    
+    It is the basic chromosome. 
+    """
     def __init__(self, genes_: list[ActionGene], identifier: int = 0):
         super().__init__(genes_=genes_, identifier=identifier)
         self.iterator = 0
 
     def __iter__(self):
+        """Generate his iterator"""
         return iter(self.genes)
     
     def __next__(self):
@@ -19,6 +23,7 @@ class ActionChromosome(AbstractChromosome):
 
     @staticmethod
     def generator(identifier: int, chromosome_size: int):    
+        """Generate a random chromosome"""
         genes = [ActionGene.generator() for _ in range(chromosome_size)]
         return ActionChromosome(identifier=identifier, genes_=genes)
     
@@ -27,15 +32,18 @@ class ActionChromosome(AbstractChromosome):
         return len(self.genes)
 
     def mutate(self):
+        """Mutate the chromsome"""
         for gene in self.genes:
             if random.random() < CHROMOSOME_MUTATION_PROBABILITY:
                 gene.mutate()
 
     def reset(self):
+        """Reset his simulation"""
         super().reset()
         self.iterator = 0
 
     def use(self):
+        """Use an action of the chromosome"""
         if self.iterator >= self.get_lenght:
             return Action(0, 0)
         action = self.genes[self.iterator]
@@ -43,6 +51,9 @@ class ActionChromosome(AbstractChromosome):
         return action
     
     def crossover(self,other):
+        """Make a crossover between self and other
+        It returns two childs chromosome from it 
+        """
         random_percent = random.random()
         child0,child1 = [], []
 

@@ -16,6 +16,7 @@ class Action:
     """
 
     def __init__(self, rotate : int=0, power : int=0):
+        """Initiate the action and make sure they are in the space of action"""
         self.rotate = clamp(rotate, -ACTION_ROTATE_SCALE, ACTION_ROTATE_SCALE)
         self.power = clamp(power, -ACTION_POWER_SCALE, ACTION_POWER_SCALE)
 
@@ -23,10 +24,11 @@ class Action:
         return f"{self.rotate} {self.power}"
 
     def __eq__(self, other) -> bool:
+        """An action is equal to another id they do the same thing"""
         return self.rotate == other.rotate and self.power == other.power
 
     def last_action(self, rotate):
-        """Choose the best action to choose"""
+        """Choose the best action to choose by straighten up the drone """
         if abs(rotate) <= 15:
             self.rotate = -rotate
 

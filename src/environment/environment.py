@@ -9,8 +9,7 @@ from utils.segment import Segment
 from utils.point import Point
 
 class Environement:
-    """ Environment of the Mars lander puzzle of CodinGames
-    
+    """ Environment of the Mars lander puzzle of CodinGames    
     FIELDS : 
         surface : 
 
@@ -44,19 +43,24 @@ class Environement:
         self.lander.update(**self.initial_state)
 
     def exit_zone(self) -> bool:
+        """Check if the drone has exit the drone"""
         return not (0 <= self.lander.x < X_SCALE and 0 <= self.lander.y < Y_SCALE)
 
     def landing_on_site(self) -> bool:
+        """Check if lander lands on the landing site"""
         if self.collision_area is None: return False
         return self.collision_area == self.surface.landing_area
 
     def landing_angle(self) -> bool:
+        """Check if the landing angle respect a succesful landing"""
         return self.lander.rotate == 0
 
     def landing_vertical_speed(self) -> bool:
+        """Check if the landing vertical speed respect a succesful landing"""
         return abs(self.lander.v_speed) <= 40
 
     def landing_horizontal_speed(self) -> bool:
+        """Check if the landing horizontal speed respect a succesful landing"""
         return abs(self.lander.h_speed) <= 20
 
     def successful_landing(self) -> bool:
@@ -74,7 +78,7 @@ class Environement:
             )
   
     def next_dynamics_parameters(self, rotate, power, dt=1):
-        
+        """Calcul the next dynamic step states"""
         h_accel = - power * math.sin(rotate*math.pi/180) 
         v_accel = power * math.cos(rotate*math.pi/180) + MARS_GRAVITY   
 

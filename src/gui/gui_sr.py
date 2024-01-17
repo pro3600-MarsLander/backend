@@ -14,26 +14,41 @@ from environment.entities.lander import Lander
 from environment.utils.constants import X_SCALE, Y_SCALE
 
 from solutions.abstract_solution import AbstractSolution
-from solutions.manual.manualSolution import ManualSolution 
+from solutions.manual.manual_solution import ManualSolution 
+from solutions.genetic.genetic_algorithm import GeneticAlgorithm
 
 from utils.point import Point
 from utils.segment import Segment
 
 from maps.basic_map_1 import MAP
 from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, FRAMES_PER_SECOND, WHITE, BLACK, BLUE, RED, GREEN, LANDERS_PATH
-from gui.log import manual_gui_log
+from gui.log import manual_gui_log, trajectory_gui_log
 
 fx = lambda x : int(WINDOW_WIDTH * x / X_SCALE)
 fy = lambda y : WINDOW_HEIGHT - int(WINDOW_HEIGHT * y / Y_SCALE)
 
 lander_image_path = os.path.join(LANDERS_PATH, 'lander_0.png')
+
 class Gui:
+
     def __init__(self, environment: Environement, solution : AbstractSolution):
+        """Graphic User Interface
+        Manage the graphics of the simulation
+        
+        Fields :
+            * environment : Environment
+            * solution : Solution
+            * display : pygame.display
+            * font : pygame.Font
+        
+        """
         self.environment = environment
         self.solution = solution
         self.env_iterator = 0
         if isinstance(solution, ManualSolution):
             print(manual_gui_log, file=sys.stderr)
+        elif isinstance(solution, GeneticAlgorithm):
+            print(trajectory_gui_log, file=sys.stderr)
         # PYGAME INITIALIZER
         pygame.init()
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -41,25 +56,28 @@ class Gui:
         self.lander_image = pygame.image.load(lander_image_path)
 
     def screen_reset(self):
+        """Draw the environment"""
         self.display.fill(BLACK)
         self.draw_surface()
         
     def reset(self):
+        """Reset all the environments"""
         self.environment.reset()
         self.trajectory = []
 
     def display_text(self, text, position):
+        """Draw text on the screen at the position position."""
         id_text = self.font.render(text, True, (255, 255, 255))
         self.display.blit(id_text, position)
 
-    def render_reset(self):        
+    def render_reset(self):  
+        """Reset the render"""
         self.env_iterator +=1
         self.screen_reset()
 
     def draw_surface(self):
+        """Draw all the segments that composed the surface"""
         surface : Surface= self.environment.surface
-        border_left = surface.lands[0].point_a
-        border_right = surface.lands[-1].point_b
         for line in surface.lands:
             pygame.draw.line(
                 self.display, 
@@ -84,10 +102,12 @@ class Gui:
     #     self.display.blit(surface, (lander.x - 15, lander.y - 15))
 
     def draw_lander(self, lander):
+        """Draw the spaceship. It is represented here by a circle"""
         pygame.draw.circle(self.display, WHITE, (fx(int(lander.x)), fy(int(lander.y))), 15)
         
 
     def write_parameters(self, lander: Lander):
+        """Draw the states of the lander"""
         self.display_text(
             "Parameters : ",
             (80, 100)
@@ -109,7 +129,8 @@ class Gui:
             (100, 220)
         )
         
-    def step(self, dt=1):        
+    def step(self, dt=1):    
+        """Compute an environment step"""    
         action = self.solution.use(environment = self.environment)
         done = self.environment.step(action, dt)
         lander_position = (fx(self.environment.lander.x), fy(self.environment.lander.y))
@@ -140,8 +161,8 @@ class Gui:
         return done
     
       
-    def pygame_step(self, success, manual_step=False):
-
+    def pygame_step(self, success):
+        """Compute the pygame step"""
         self.write_parameters(self.environment.lander)
         self.draw_lander(self.environment.lander)
 
@@ -191,6 +212,7 @@ class Gui:
                 sys.exit()
 
     def run(self):
+        """Run the simulation"""
         done = False
         self.reset()
         self.render_reset()

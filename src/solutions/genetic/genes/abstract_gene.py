@@ -18,9 +18,7 @@ class AbstractGene:
     def mutate(self):
         pass
 
-    @abstractmethod
-    def get_action(self)->Action:
-        pass
+
 
 
 

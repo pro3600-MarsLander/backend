@@ -8,6 +8,13 @@ from solutions.genetic.chromosomes.action_chromosome import ActionChromosome
 chromosome_type=ActionChromosome
 
 class Population:
+    """Represent a population of chromosome
+    This population can evolve with different function
+        * Selection
+        * Mutation
+        * Crossover
+    
+    """
     chromosomes : list[AbstractChromosome]
 
     def __init__(self, chromosomes: list[AbstractChromosome]):
@@ -54,6 +61,9 @@ class Population:
 
     
     def cumulative_wheel(self, initial_index, final_index) -> GeneratorExit(list[AbstractChromosome]):
+        """
+        Generate with the cumulative wheel algorithm, random pair of chromosome
+        """
         total_score = sum(map(lambda chromosome: chromosome.score, self.chromosomes))
         cumulative_scores = list()
         cumulative_score = 0
@@ -76,6 +86,7 @@ class Population:
                     paired = False
 
     def mutate(self):
+        """Create a new population by making them mutate and mixing together"""
         final_index = int(self.get_length*(1 - GRADED_RETAIN_PERCENT))
         i0, i1 = 0, 1
         new_chromosomes = []
@@ -93,24 +104,30 @@ class Population:
         self.chromosomes = new_chromosomes.copy()
 
     def fill_with_new_chromosome(self):
+        """Create new random chromosome"""
         for identifier in range(self.population_size - len(self.chromosomes)):
             self.chromosomes.append(
                 ActionChromosome.generator(identifier=identifier, chromosome_size=CHROMOSOME_SIZE)
             )
 
     def population_switch(self):
+        """Switch between two slots of population
+        It have the goal to save performances. Not implemented yiet
+        """
         self.chromosomes = [
             c for c in self.new_chromosomes
         ]
         self.new_chromosomes = []
 
     def set_score(self, index, score):
+        """Set the score of a chromosome"""
         self.chromosomes[index].score += score
         # identifier = self.chromosomes[index].identifier
         # self.chromosomes_score[identifier] += score
         #self.chromosomes_score[index] += score
 
     def evolution(self):
+        """Make the population evolve"""
         #self.generate_score()
         best_chromosome = self.selection()
         self.mutate()

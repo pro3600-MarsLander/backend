@@ -20,9 +20,11 @@ class ActionGene(AbstractGene, Action):
 
 
     def mutate(self):
+        """Mutate a gene
+        The law of probability that they followed is not generaly uniform 
+        but is generaly centered and symetrical.
+
+        """
         self.rotate = random.choices(list(range(-15, 16)), WEIGHTS_ROTATION )[0]
         self.power = random.choices([-1, 0, 1], WEIGHTS_POWER)[0]
 
-    
-    def get_action(self):
-        return self

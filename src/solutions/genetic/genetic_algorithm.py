@@ -27,6 +27,19 @@ class AlgoType(Enum):
 
 
 class GeneticAlgorithm(AbstractSolution):
+    """Class that implement Genetic Algorithm
+    Wkipedia : https://fr.wikipedia.org/wiki/Algorithme_g%C3%A9n%C3%A9tique
+
+    Fields :
+        * population_size : int
+        * chromsome_size : int
+        * algo_type : AlgoType
+        * population : list[Chromosome]
+        * epoch : int
+        * best_chromosome : Chromosome
+        * scoring_manager : ScoringManager
+        
+    """
     def __init__(self, 
                 environment : Environement,
                 population_size: int = POPULATION_SIZE, 
@@ -46,12 +59,15 @@ class GeneticAlgorithm(AbstractSolution):
 
     @property
     def get_index_best(self):
+        """Get the identifier of the best chromosome"""
         return self.best_chromosome.identifier
     
     def reset(self, environement):
+        """Reset the environment"""
         self.__init__(environment=environement)
 
     def get_parameters(self) -> dict:
+        """Get the parameters of the GA"""
         return {
             "Population size": self.population_size,
             "Chromosome size": self.chromosome_size,
@@ -59,16 +75,19 @@ class GeneticAlgorithm(AbstractSolution):
         }
 
     def use(self, **kargs):
+        """Use for a step a chromosome"""
         action = self.best_chromosome.use()
         return action
     
     def evolution(self, environment: Environement):
+        """Simulate the evolution of the population"""
         while self.epoch < MAXIMUM_EPOCH:
             done = self.one_evolution(environment)
             
             if done: break
             
     def use_chromosome(self, chromosome_index, environment):
+        """Use a chromsome to is fulest and compute his score"""
         done = False
         environment.reset()
         trajectory = []
@@ -87,6 +106,7 @@ class GeneticAlgorithm(AbstractSolution):
 
 
     def one_evolution(self, environment: Environement):
+        """Compute all chromosome trajectory and compute the scores"""
         self.epoch +=1  
         if self.epoch == MAXIMUM_EPOCH:
             raise Exception("The maximum epoch has been reached")

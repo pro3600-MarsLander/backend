@@ -1,8 +1,3 @@
-"""
-This constants are changeable on the GUI 
-"""
-
-
 
 CHROMOSOME_TYPE = 1 #For action chromosome
 

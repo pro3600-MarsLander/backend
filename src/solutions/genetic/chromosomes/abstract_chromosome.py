@@ -6,7 +6,7 @@ from environment.action import Action
 from solutions.genetic.genes.abstract_gene import AbstractGene
 
 class AbstractChromosome:
-
+    """Represent the general shape of a chromosome"""
     def __init__(self, identifier: int, genes_):
         self.identifier = identifier
         self.genes = genes_

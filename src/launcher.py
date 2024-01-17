@@ -12,7 +12,7 @@ from maps.map_path import FLAT_SURFACE, LEVEL_ONE, CAVE_REVERSED
 
 from solutions.examples.solution_fall import SolutionFall
 from solutions.genetic.genetic_algorithm import GeneticAlgorithm
-from solutions.manual.manualSolution import ManualSolution
+from solutions.manual.manual_solution import ManualSolution
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -26,6 +26,9 @@ for map_json_name in os.listdir(MAP_PATH):
 
 
 def main():
+    """main function
+    Launch menue, simulation, ... 
+    """
     map, solution = menue(map_list)
 
     points, initial_state = map.get('points'), map.get('lander_state')

@@ -27,6 +27,16 @@ fy = lambda y : WINDOW_HEIGHT - int(WINDOW_HEIGHT * y / Y_SCALE)
 class GuiTrajectory:
     
     def __init__(self, environment: Environement, solution : AbstractSolution):
+        """Graphic User Interface
+        Manage the graphics of the simulation
+        
+        Fields :
+            * environment : Environment
+            * solution : Solution
+            * display : pygame.display
+            * font : pygame.Font
+        
+        """
         self.environment = environment
         self.solution = solution
         self.env_iterator = 0
@@ -38,25 +48,28 @@ class GuiTrajectory:
         
 
     def screen_reset(self):
+        """Draw the environment"""
         self.display.fill(BLACK)
         self.draw_surface()
         
     def reset(self):
+        """Reset all the environments"""
         self.environment.reset()
         self.trajectories = []
 
     def display_text(self, text, position):
+        """Draw text on the screen at the position position."""
         id_text = self.font.render(text, True, (255, 255, 255))
         self.display.blit(id_text, position)
 
-    def render_reset(self):        
+    def render_reset(self):    
+        """Reset the render"""
         self.env_iterator +=1
         self.screen_reset()
 
     def draw_surface(self):
+        """Draw all the segments that composed the surface"""
         surface : Surface= self.environment.surface
-        border_left = surface.lands[0].point_a
-        border_right = surface.lands[-1].point_b
         for line in surface.lands:
             pygame.draw.line(
                 self.display, 
@@ -65,7 +78,8 @@ class GuiTrajectory:
                 [fx(line.point_b.x), fy(line.point_b.y)]
             )
 
-    def draw_trajectory(self, trajectory, color, width):
+    def draw_trajectory(self, trajectory:list[Point], color:tuple, width:int):
+        """Draw a trajectory of the lander, the trajectory is a list of points"""
         for index in range(len(trajectory)-1):
             point_a = trajectory[index]
             point_b = trajectory[index+1]
@@ -77,9 +91,11 @@ class GuiTrajectory:
                 width=width
             )
             
-    def step(self):        
+    def step(self)->bool:        
         """
         This is a step for each evolution
+
+        If a succesful trajectory has been found, it returns True else False.
         """
         done, trajectories = self.solution.one_evolution(environment=self.environment)
         #pygame.transform.rotate(self.lander_image,self.rotate)
@@ -98,6 +114,7 @@ class GuiTrajectory:
         return done
     
     def draw_parameters(self):
+        """Draw the parameters of the simulation"""
         self.display_text(
             "Parameters : ",
             (80, 100)
@@ -109,6 +126,11 @@ class GuiTrajectory:
             )
 
     def pygame_step(self, success, manual_step=True):
+        """It represent a pygame step
+
+        manual_step : bool
+            Represent the need to push right arrow too continue the simulation
+        """
         def quit_gui():
             pygame.display.quit()
             pygame.quit()
@@ -137,6 +159,7 @@ class GuiTrajectory:
                 sys.exit()
 
     def run(self):
+        """Run the simulation"""
         done = False
         self.reset()
         self.render_reset()

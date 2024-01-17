@@ -6,7 +6,8 @@ from environment.utils.constants import X_SCALE, Y_SCALE, H_SPEED_SCALE, V_SPACE
 class Entity:
 
 
-    """Define the lander
+    """Define a dynamic entity
+    An entity do not have a form 
     x : [0, 6999]
         Coordinate on the horizontal axe
     y : [0, 2999]
@@ -29,6 +30,7 @@ class Entity:
         self.v_speed = kargs.get('v_speed')
 
     def __str__(self):
+        """Return the dymamic states of the entity in string"""
         try:
             return f"Position : {self.x} | {self.y} \nVitesse: {self.h_speed} | {self.v_speed}"
         except AttributeError :
@@ -36,6 +38,7 @@ class Entity:
         
     
     def update(self, **kwargs):
+        """Update the fields with kargs value"""
         for cle, valeur in kwargs.items():
             if hasattr(self, cle):
                 setattr(self, cle, valeur)
@@ -43,10 +46,12 @@ class Entity:
                 print(f"Attention : Le champ '{cle}' n'existe pas dans la classe.", file=sys.stderr)
         
     def get_state(self):
+        """Return a list of the state"""
         return [self.x, self.y, self.h_speed, self.v_speed]
 
 
     def __eq__(self, other) -> bool:
+        """An entity is equal to another if it have the same state"""
         for self_attr, other_attr in zip(vars(self).values(), vars(other).values()):
             if not round(self_attr) == round(other_attr):
                 return False
