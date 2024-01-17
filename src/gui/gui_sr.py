@@ -8,14 +8,14 @@ import os
 import sys
 import time
 
-from environment.environment import Environement
+from environment.environment import Environment
 from environment.surface import Surface
 from environment.entities.lander import Lander
 from environment.utils.constants import X_SCALE, Y_SCALE
 
 from solutions.abstract_solution import AbstractSolution
 from solutions.manual.manual_solution import ManualSolution 
-from solutions.genetic.genetic_algorithm import GeneticAlgorithm
+from solutions.genetic.genetic_solution import GeneticSolution
 
 from utils.point import Point
 from utils.segment import Segment
@@ -30,7 +30,7 @@ lander_image_path = os.path.join(LANDERS_PATH, 'lander_0.png')
 
 class Gui:
 
-    def __init__(self, environment: Environement, solution : AbstractSolution):
+    def __init__(self, environment: Environment, solution : AbstractSolution):
         """Graphic User Interface
         Manage the graphics of the simulation
         
@@ -46,7 +46,7 @@ class Gui:
         self.env_iterator = 0
         if isinstance(solution, ManualSolution):
             print(manual_gui_log, file=sys.stderr)
-        elif isinstance(solution, GeneticAlgorithm):
+        elif isinstance(solution, GeneticSolution):
             print(trajectory_gui_log, file=sys.stderr)
         # PYGAME INITIALIZER
         pygame.init()

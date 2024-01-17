@@ -3,7 +3,7 @@ import os
 import sys
 import time
 
-from environment.environment import Environement
+from environment.environment import Environment
 from environment.surface import Surface
 from environment.entities.lander import Lander
 from environment.utils.constants import X_SCALE, Y_SCALE
@@ -16,7 +16,6 @@ from solutions.abstract_solution import AbstractSolution
 from utils.point import Point
 from utils.segment import Segment
 
-from maps.basic_map_1 import MAP
 from gui.utils.constants import WINDOW_HEIGHT, WINDOW_WIDTH, WHITE, BLACK, BLUE, RED, GREEN
 
 FRAMES_PER_SECOND = 2   
@@ -26,7 +25,7 @@ fy = lambda y : WINDOW_HEIGHT - int(WINDOW_HEIGHT * y / Y_SCALE)
 
 class GuiTrajectory:
     
-    def __init__(self, environment: Environement, solution : AbstractSolution):
+    def __init__(self, environment: Environment, solution : AbstractSolution):
         """Graphic User Interface
         Manage the graphics of the simulation
         

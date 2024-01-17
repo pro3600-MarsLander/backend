@@ -1,6 +1,6 @@
 from numpy import sqrt
 
-from environment.environment import Environement
+from environment.environment import Environment
 from environment.entities.lander import Lander
 from environment.surface import Surface
 from environment.utils.constants import X_SCALE, Y_SCALE
@@ -70,7 +70,7 @@ class ScoringManager:
         
         return max(0, round(SCORE_MAX_LANDING_OFF_SITE*(1 - abs(distance)/kargs.get("surface").length)))
 
-    def scoring_speed(self, environment: Environement):
+    def scoring_speed(self, environment: Environment):
         """Compute speed score
         If it lands on site, it compute a score by taking vertical and horizontal speed differently
 
@@ -85,7 +85,7 @@ class ScoringManager:
             score = 0
         return score
 
-    def compute_score(self, environment: Environement):
+    def compute_score(self, environment: Environment):
         """Compute the global score"""
         on_site = environment.landing_on_site()
         if on_site:

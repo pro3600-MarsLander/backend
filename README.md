@@ -111,7 +111,7 @@ Afin d'ajouter sa solution il faut créer un dossier solution contenant au moins
 ### Methodes
 
 * get_parameters : Renvoi les paramètres de la solution que l'on souhaite afficher.
-* use(environement) : Renvoi l'action a appliquer pour cette étape
+* use(environment) : Renvoi l'action a appliquer pour cette étape
 
 ### Interface graphique : TODO
 

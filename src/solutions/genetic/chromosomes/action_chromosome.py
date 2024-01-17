@@ -14,13 +14,28 @@ class ActionChromosome(AbstractChromosome):
         super().__init__(genes_=genes_, identifier=identifier)
         self.iterator = 0
 
+    def __str__(self) -> str:
+        """Return a string representation of the chromosome"""
+        return f"Chromosome {self.identifier} : {len(self.genes)}"
+    
     def __iter__(self):
         """Generate his iterator"""
         return iter(self.genes)
     
     def __next__(self):
         return next(self)
-
+    
+    def __ne__(self, other: object) -> bool:
+        """Test if two chromosome are different"""
+        for g0,g1 in zip(self, other):
+            if g0 != g1:
+                return True
+        return False
+    
+    def __eq__(self, other: object) -> bool:
+        """Test if two chromosome are equals"""
+        return not self.__ne__(other)
+    
     @staticmethod
     def generator(identifier: int, chromosome_size: int):    
         """Generate a random chromosome"""
@@ -28,7 +43,7 @@ class ActionChromosome(AbstractChromosome):
         return ActionChromosome(identifier=identifier, genes_=genes)
     
     @property
-    def get_lenght(self):
+    def get_length(self):
         return len(self.genes)
 
     def mutate(self):
@@ -44,7 +59,7 @@ class ActionChromosome(AbstractChromosome):
 
     def use(self):
         """Use an action of the chromosome"""
-        if self.iterator >= self.get_lenght:
+        if self.iterator >= self.get_length:
             return Action(0, 0)
         action = self.genes[self.iterator]
         self.iterator +=1

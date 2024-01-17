@@ -16,12 +16,7 @@ class AbstractChromosome:
     @abstractmethod
     def generator(**kargs):
         pass
-
-
-    @property
-    def get_length(self):
-        pass
-
+    
     @abstractmethod
     def mutate(self):
         pass        

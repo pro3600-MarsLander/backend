@@ -9,7 +9,7 @@ class AbstractSolution:
         pass
 
     @abstractmethod
-    def use(self, environement=None) -> Action:
+    def use(self, Environment=None) -> Action:
         """
         By given some parameters, use return the next action the lander have to make
         """

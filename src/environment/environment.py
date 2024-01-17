@@ -8,7 +8,7 @@ from environment.utils.constants import MARS_GRAVITY, X_SCALE, Y_SCALE, ROTATE_S
 from utils.segment import Segment
 from utils.point import Point
 
-class Environement:
+class Environment:
     """ Environment of the Mars lander puzzle of CodinGames    
     FIELDS : 
         surface : 

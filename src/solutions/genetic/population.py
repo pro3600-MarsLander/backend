@@ -5,8 +5,6 @@ from solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
 from solutions.genetic.config import GRADED_RETAIN_PERCENT, NONGRADED_RETAIN_PERCENT, POPULATION_SIZE, CHROMOSOME_SIZE
 from solutions.genetic.chromosomes.action_chromosome import ActionChromosome
 
-chromosome_type=ActionChromosome
-
 class Population:
     """Represent a population of chromosome
     This population can evolve with different function
@@ -25,11 +23,18 @@ class Population:
 
 
     @staticmethod
-    def generator(population_size: int=POPULATION_SIZE, chromosome_size=CHROMOSOME_SIZE, **kargs):
+    def generator(population_size: int=POPULATION_SIZE, chromosome_size=CHROMOSOME_SIZE, chromosome_type=ActionChromosome, **kargs):
         
-        chromosomes = [ActionChromosome.generator(identifier=identifier, chromosome_size=chromosome_size) for identifier in range(population_size)]
+        chromosomes = [chromosome_type.generator(identifier=identifier, chromosome_size=chromosome_size) for identifier in range(population_size)]
         return Population(chromosomes=chromosomes)
     
+    def __len__(self):
+        return len(self.chromosomes)
+    
+    def __getitem__(self, key):
+        return self.chromosomes[key]
+    
+
     @property
     def get_length(self) -> int:
         return len(self.chromosomes)
@@ -46,8 +51,9 @@ class Population:
 
     def selection(self):
         """ Do the population go trought a selection process
-        - Take a part of the population by the score
-        - Choose in the leftover randomly some chromosome
+        - Sort the population by score
+        - Take the best GRADED_RETAIN_PERCENT
+
         """
 
         #Extract the population sorted by score of each chromosome
@@ -60,9 +66,10 @@ class Population:
         return best_chromosome
 
     
-    def cumulative_wheel(self, initial_index, final_index) -> GeneratorExit(list[AbstractChromosome]):
+    def cumulative_wheel(self, number_of_childs) -> GeneratorExit(list[AbstractChromosome]):
         """
         Generate with the cumulative wheel algorithm, random pair of chromosome
+        We assume that the population is already sorted by score
         """
         total_score = sum(map(lambda chromosome: chromosome.score, self.chromosomes))
         cumulative_scores = list()
@@ -70,33 +77,35 @@ class Population:
         for identifier in range(self.get_length):
             cumulative_score += self.chromosomes[identifier].score / total_score 
             cumulative_scores.append(cumulative_score)
-            
-        paired = False
         
-        while initial_index < final_index:
-                random_percent = min(0.999, random.random() + cumulative_scores[initial_index])
-                i = initial_index
-                while cumulative_scores[i] < random_percent : i+=1
+        paired = False
+
+        for j in range(number_of_childs):
+                random_percent = min(0.99999, random.random())
+                index = self.get_length - 1
+                for i in range(self.get_length):
+                    if cumulative_scores[i] > random_percent:
+                        index = i
+                        break    
+                
                 if not paired:
-                    chromosome_parent0 = self.chromosomes[i]
+                    chromosome_parent0 = self.chromosomes[index]
                     paired = True
-                else:
-                    yield [chromosome_parent0, self.chromosomes[i]]
-                    initial_index+=2
+                elif chromosome_parent0 != self.chromosomes[index]:
                     paired = False
+                    yield [chromosome_parent0, self.chromosomes[index]]
+                    
 
     def mutate(self):
         """Create a new population by making them mutate and mixing together"""
-        final_index = int(self.get_length*(1 - GRADED_RETAIN_PERCENT))
-        i0, i1 = 0, 1
+        mutated_partition_size = int(self.get_length*(1 - GRADED_RETAIN_PERCENT))
         new_chromosomes = []
-        for parent0, parent1 in self.cumulative_wheel(0, final_index):               
+        for parent0, parent1 in self.cumulative_wheel(mutated_partition_size):               
             child0, child1 = parent0.crossover(parent1)
             child0.mutate()
             child1.mutate()
             new_chromosomes.append(child0)
             new_chromosomes.append(child1)
-
             # self.chromosomes[i0] = child0
             # self.chromosomes[i1] = child1 
             # i0 +=1

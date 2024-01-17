@@ -1,6 +1,13 @@
+##
+#%%
 from enum import Enum, auto
 
-from environment.environment import Environement
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+
+from environment.environment import Environment
 
 from score.scoring_manager import ScoringManager
 
@@ -24,9 +31,10 @@ class AlgoType(Enum):
     def get_gene_type(algo_type: int):
         if algo_type == 1:
             return ActionGene
+##
+    #%%
 
-
-class GeneticAlgorithm(AbstractSolution):
+class GeneticSolution(AbstractSolution):
     """Class that implement Genetic Algorithm
     Wkipedia : https://fr.wikipedia.org/wiki/Algorithme_g%C3%A9n%C3%A9tique
 
@@ -41,7 +49,7 @@ class GeneticAlgorithm(AbstractSolution):
         
     """
     def __init__(self, 
-                environment : Environement,
+                environment : Environment,
                 population_size: int = POPULATION_SIZE, 
                 chromosome_size: int = CHROMOSOME_SIZE,
                 ):
@@ -49,8 +57,7 @@ class GeneticAlgorithm(AbstractSolution):
         self.chromosome_size = chromosome_size
         self.algo_type = AlgoType.ACTION
         self.population = Population.generator(
-            population_size=population_size,
-            chromosome_type=AlgoType.get_chromosome_type(self.algo_type)
+            population_size=population_size
         )
         self.epoch = 0
         self.best_chromosome : AbstractChromosome = None
@@ -62,9 +69,9 @@ class GeneticAlgorithm(AbstractSolution):
         """Get the identifier of the best chromosome"""
         return self.best_chromosome.identifier
     
-    def reset(self, environement):
+    def reset(self, environment: Environment):
         """Reset the environment"""
-        self.__init__(environment=environement)
+        self.__init__(environment=environment)
 
     def get_parameters(self) -> dict:
         """Get the parameters of the GA"""
@@ -79,7 +86,7 @@ class GeneticAlgorithm(AbstractSolution):
         action = self.best_chromosome.use()
         return action
     
-    def evolution(self, environment: Environement):
+    def evolution(self, environment: Environment):
         """Simulate the evolution of the population"""
         while self.epoch < MAXIMUM_EPOCH:
             done = self.one_evolution(environment)
@@ -105,7 +112,7 @@ class GeneticAlgorithm(AbstractSolution):
         return False, trajectory, score
 
 
-    def one_evolution(self, environment: Environement):
+    def one_evolution(self, environment: Environment):
         """Compute all chromosome trajectory and compute the scores"""
         self.epoch +=1  
         if self.epoch == MAXIMUM_EPOCH:
