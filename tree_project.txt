@@ -1,0 +1,85 @@
+.
+├── data
+│   ├── images
+│   │   ├── screenshot_Level one.jpeg
+│   │   └── screenshot_Reversed Cave.jpeg
+│   ├── lander
+│   │   ├── lander_0.png
+│   │   ├── lander_1.png
+│   │   ├── lander_2.png
+│   │   └── lander_3.png
+│   └── maps
+│       ├── cave_reversed.json
+│       ├── flat_surface.json
+│       └── level_one_cg.json
+├── README.md
+├── requirements.txt
+├── src
+│   ├── environment
+│   │   ├── action.py
+│   │   ├── entities
+│   │   │   ├── entity.py
+│   │   │   ├── __init__.py
+│   │   │   └── lander.py
+│   │   ├── environment.py
+│   │   ├── __init__.py
+│   │   ├── surface.py
+│   │   └── utils
+│   │       ├── constants.py
+│   │       ├── __init__.py
+│   │       └── utils.py
+│   ├── game
+│   │   ├── __init__.py
+│   │   └── menue.py
+│   ├── gui
+│   │   ├── gui_sr.py
+│   │   ├── gui_trajectory.py
+│   │   ├── log.py
+│   │   └── utils
+│   │       └── constants.py
+│   ├── __init__.py
+│   ├── launcher.py
+│   ├── map_path.py
+│   ├── score
+│   │   ├── __init__.py
+│   │   ├── scoring_manager.py
+│   │   └── utils
+│   │       └── constants.py
+│   ├── solutions
+│   │   ├── abstract_solution.py
+│   │   ├── examples
+│   │   │   ├── __init__.py
+│   │   │   └── solution_fall.py
+│   │   ├── genetic
+│   │   │   ├── chromosomes
+│   │   │   │   ├── abstract_chromosome.py
+│   │   │   │   └── action_chromosome.py
+│   │   │   ├── config.py
+│   │   │   ├── genes
+│   │   │   │   ├── abstract_gene.py
+│   │   │   │   └── action_gene.py
+│   │   │   ├── genetic_solution.py
+│   │   │   ├── __init__.py
+│   │   │   └── population.py
+│   │   └── manual
+│   │       └── manual_solution.py
+│   └── utils
+│       ├── display_map.py
+│       ├── function.py
+│       ├── __init__.py
+│       ├── point.py
+│       ├── segment.py
+│       └── utils.py
+├── tests
+│   ├── data
+│   │   ├── free_fall_level_one.jsonl
+│   │   └── power_fall_level_one.jsonl
+│   ├── environment_test.py
+│   ├── environment_test_.py
+│   ├── genetic_test.py
+│   ├── __init__.py
+│   ├── scoring_test.py
+│   └── utils_test.py
+└── tree_project.txt
+
+22 directories, 60 files

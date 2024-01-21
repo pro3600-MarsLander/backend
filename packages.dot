@@ -1,0 +1,34 @@
+digraph "packages" {
+rankdir=BT
+charset="utf-8"
+"src" [color="black", label=<src>, shape="box", style="solid"];
+"src.environment" [color="black", label=<src.environment>, shape="box", style="solid"];
+"src.environment.action" [color="black", label=<src.environment.action>, shape="box", style="solid"];
+"src.environment.entities" [color="black", label=<src.environment.entities>, shape="box", style="solid"];
+"src.environment.entities.entity" [color="black", label=<src.environment.entities.entity>, shape="box", style="solid"];
+"src.environment.entities.lander" [color="black", label=<src.environment.entities.lander>, shape="box", style="solid"];
+"src.environment.environment" [color="black", label=<src.environment.environment>, shape="box", style="solid"];
+"src.environment.surface" [color="black", label=<src.environment.surface>, shape="box", style="solid"];
+"src.environment.utils" [color="black", label=<src.environment.utils>, shape="box", style="solid"];
+"src.environment.utils.constants" [color="black", label=<src.environment.utils.constants>, shape="box", style="solid"];
+"src.environment.utils.utils" [color="black", label=<src.environment.utils.utils>, shape="box", style="solid"];
+"src.game" [color="black", label=<src.game>, shape="box", style="solid"];
+"src.game.menue" [color="black", label=<src.game.menue>, shape="box", style="solid"];
+"src.launcher" [color="black", label=<src.launcher>, shape="box", style="solid"];
+"src.map_path" [color="black", label=<src.map_path>, shape="box", style="solid"];
+"src.score" [color="black", label=<src.score>, shape="box", style="solid"];
+"src.score.scoring_manager" [color="black", label=<src.score.scoring_manager>, shape="box", style="solid"];
+"src.utils" [color="black", label=<src.utils>, shape="box", style="solid"];
+"src.utils.display_map" [color="black", label=<src.utils.display_map>, shape="box", style="solid"];
+"src.utils.function" [color="black", label=<src.utils.function>, shape="box", style="solid"];
+"src.utils.point" [color="black", label=<src.utils.point>, shape="box", style="solid"];
+"src.utils.segment" [color="black", label=<src.utils.segment>, shape="box", style="solid"];
+"src.utils.utils" [color="black", label=<src.utils.utils>, shape="box", style="solid"];
+"src.environment.environment" -> "src.environment.utils" [arrowhead="open", arrowtail="none"];
+"src.environment.surface" -> "src.environment.utils" [arrowhead="open", arrowtail="none"];
+"src.launcher" -> "src.environment.environment" [arrowhead="open", arrowtail="none"];
+"src.launcher" -> "src.environment.surface" [arrowhead="open", arrowtail="none"];
+"src.launcher" -> "src.game.menue" [arrowhead="open", arrowtail="none"];
+"src.launcher" -> "src.utils.utils" [arrowhead="open", arrowtail="none"];
+"src.utils.segment" -> "src.utils.utils" [arrowhead="open", arrowtail="none"];
+}

@@ -1,0 +1,78 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class Action {
+            power
+            rotate
+            last_action(rotate)
+          }
+          class Entity {
+            h_speed : float
+            v_speed : float
+            x : int
+            y : int
+            copy(other)
+            get_state()
+            update()
+          }
+          class Environment {
+            collision_area : NoneType
+            initial_state
+            lander
+            surface
+            exit_zone() bool
+            landing_angle() bool
+            landing_horizontal_speed() bool
+            landing_on_site() bool
+            landing_vertical_speed() bool
+            next_dynamics_parameters(rotate, power, dt)
+            reset()
+            step(action: Action, dt) bool
+            successful_landing() bool
+          }
+          class Lander {
+            fuel : int
+            h_speed : float
+            power : int
+            rotate : int
+            v_speed : float
+            x : int
+            y : int
+            get_state()
+          }
+          class Point {
+            x : int
+            y : int
+            distance(other) float
+          }
+          class ScoringManager {
+            compute_score(environment: Environment)
+            landing_distance(surface: Surface, lander: Lander, collision_land: Segment)
+            scoring_angle(lander)
+            scoring_distance_off_site(distance, surface_length)
+            scoring_distance_on_site()
+            scoring_speed_off_site(lander: Lander, on_site: bool)
+            scoring_speed_on_site(lander: Lander, on_site: bool)
+          }
+          class Segment {
+            point_a
+            point_b
+            ccw(A: Point, B: Point, C: Point) bool
+            collision(other) bool
+            lenght() float
+          }
+          class Surface {
+            landing_area
+            lands : list[Segment]
+            length : float
+            get_points()
+            is_landing_area(segment)
+            they_collide(trajectory: Segment) bool
+          }
+  
+       </div>
+  </body>
+</html>

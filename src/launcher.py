@@ -2,10 +2,11 @@ import json
 import os
 import sys
 
-from game.menue import menue
 from environment.environment import Environment
 from environment.surface import Surface
 from utils.utils import load_map
+
+from gui.menue import menue
 from gui.gui_sr import Gui
 from gui.gui_trajectory import GuiTrajectory
 
