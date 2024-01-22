@@ -1,4 +1,14 @@
 import unittest
+
+
+
+from src.solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
+from src.solutions.genetic.genes.action_gene import ActionGene
+from src.environment.environment import Environment
+from src.environment.action import Action
+from src.environment.entities.lander import Lander
+from src.environment.surface import Surface
+
 import json
 
 import sys

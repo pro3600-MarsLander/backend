@@ -1,4 +1,5 @@
 import sys
+from typing import Any
 
 from environment.utils.constants import X_SCALE, Y_SCALE, H_SPEED_SCALE, V_SPACE_SCALE, ROTATE_SCALE, POWER_SCALE
     

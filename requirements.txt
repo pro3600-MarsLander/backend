@@ -1,1 +1,9 @@
 pygame==2.1.0
+numpy==1.26.3
+math==1.0.1
+random==1.0.1
+
+json==2.0.9
+enum==0.4.7
+treelib==1.6.1
+ 

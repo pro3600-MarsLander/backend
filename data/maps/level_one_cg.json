@@ -6,7 +6,7 @@
         "y" : 2500,
         "h_speed" : 0, 
         "v_speed" : 0,
-        "fuel" : 1000,
+        "fuel" : 500,
         "rotate" : 0,
         "power" : 0
     }

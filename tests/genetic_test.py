@@ -4,12 +4,6 @@ import random
 from src.solutions.genetic.genetic_solution import GeneticSolution
 from src.solutions.genetic.population import Population
 from src.solutions.genetic.chromosomes.action_chromosome import ActionChromosome
-from src.solutions.genetic.chromosomes.abstract_chromosome import AbstractChromosome
-from src.solutions.genetic.genes.action_gene import ActionGene
-from src.environment.environment import Environment
-from src.environment.action import Action
-from src.environment.entities.lander import Lander
-from src.environment.surface import Surface
 
 class TestGenetic(unittest.TestCase):
     def test_population_generator(self):

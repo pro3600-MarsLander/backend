@@ -21,7 +21,12 @@ class Environment:
     def __init__(self, surface : list, initial_state):
         self.surface : Surface = surface
         self.initial_state = initial_state
-        self.lander = Lander(**initial_state)
+        if isinstance(initial_state, dict):
+            self.lander = Lander(**initial_state)
+        else :
+            self.lander = initial_state
+            self.initial_state = dir(self.lander)
+            print(self.initial_state)
         self.collision_area = None
 
 

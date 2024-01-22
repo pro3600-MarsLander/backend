@@ -1,6 +1,11 @@
 import unittest
 import json
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 from src.environment.environment import Environment    
 from src.environment.action import Action
 from src.environment.entities.lander import Lander

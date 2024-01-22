@@ -1,4 +1,5 @@
 import sys
+from typing import Any
 
 from environment.entities.entity import Entity
 from environment.utils.constants import X_SCALE, Y_SCALE, H_SPEED_SCALE, V_SPACE_SCALE, ROTATE_SCALE, POWER_SCALE
@@ -43,6 +44,13 @@ class Lander(Entity):
         except AttributeError :
             return "lander not yiet initialized"
         
+
+    def __eq__(self, other) -> bool:
+        for attr in self.__dict__:
+            if getattr(self, attr) != getattr(other, attr):
+                return False
+        return True
+    
     def get_state(self):
         """Get a list of the state"""
         return [self.x, self.y, self.h_speed, self.v_speed, self.fuel, self.rotate, self.power]
