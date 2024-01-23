@@ -39,32 +39,3 @@ class TestGenetic(unittest.TestCase):
         population.population_sort()
         best_chromosome = population.selection()
         self.assertEqual(best_chromosome.score, 9)
-
-    # def test_selection(self):
-    #     population = Population.generator(10, 100, ActionChromosome)
-    #     population.chromosomes_score = [i for i in range(10)]
-    #     best_chromosome = population.selection()
-    #     self.assertEqual(best_chromosome.score, 0)
-    #     self.assertEqual(best_chromosome, population.best_chromosome)
-
-    # def test_mutation(self):
-    #     population = Population.generator(10, 100, ActionChromosome)
-    #     population.mutation()
-    #     self.assertEqual(len(population), 10)
-    #     self.assertEqual(len(population[0].genes), 100)
-    #     self.assertEqual(len(population[0].genes), len(population[1].genes))
-
-
-    # def test_genetic(self):
-    #     with open("./data/surfaces/level_one_cg.json", "r") as json_file:
-    #         initial_parameters = json.load(json_file) 
-    #     points = initial_parameters.get('points')
-    #     surface = Surface(list(map(lambda point: Point(*point), points)))
-    #     initial_state = initial_parameters.get('lander_state')
-    #     lander = Lander(**initial_parameters.get('lander_state'))        
-
-    #     environment = Environment(surface, initial_state)
-    #     solution = GeneticSolution(environment)
-    #     solution.evolution(environment)
-    #     self.assertEqual(solution.best_chromosome, solution.population.best_chromosome)
-    #     self.assertEqual(solutio

@@ -25,8 +25,7 @@ class Environment:
             self.lander = Lander(**initial_state)
         else :
             self.lander = initial_state
-            self.initial_state = dir(self.lander)
-            print(self.initial_state)
+            self.initial_state = self.lander.get_state()
         self.collision_area = None
 
 
